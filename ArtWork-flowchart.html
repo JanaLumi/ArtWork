@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dustbuster — system diagram</title>
+<style>
+
+  @font-face {
+    font-family: "Merriweather";
+    src: url("https://janalumi.github.io/Dustbuster/fonts/Merriweather-Regular.ttf") format("truetype");
+  /*  font-weight: normal;
+    font-style: normal; */
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: "DM Mono";
+    src: url("https://janalumi.github.io/Dustbuster/fonts/DMMono-Regular.ttf") format("truetype");
+  /*  font-weight: normal;
+    font-style: normal; */
+    font-display: swap;
+  }
+ 
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: Merriweather, Georgia, serif;
+    background: #d9edd9;
+    color: #2c2c2a;
+    min-height: 100vh;
+    padding: 2rem;
+  }
+
+  header { margin-bottom: 1.25rem; }
+  header h1 { font-family: Merriweather, Georgia, serif; font-size: 1.3rem; font-weight: 500; color: #2c2c2a; }
+  header p { font-family: "DM Mono", Courier, monospace, sans-serif; font-size: 0.85rem; color: #888780; margin-top: 0.2rem; }
+
+  .legend {
+    display: flex;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.80rem;
+    color: #5f5e5a;
+  }
+  .legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  #diagram-wrap {
+    position: relative;
+    background: #ffffff;
+    border: 0.5px solid #d3d1c7;
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: none;
+    user-select: none;
+  }
+
+  #diagram-inner {
+    padding: 3rem 4rem; // this is where you edit padding for the border of the flowchart
+  }
+
+  #diagram-inner svg {
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  #lens {
+    position: absolute;
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    pointer-events: none;
+    display: none;
+    overflow: hidden;
+    border: 2.5px solid #534AB7;
+    outline: 1px solid #AFA9EC;
+    background: #fff;
+  }
+
+  #lens canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    border-radius: 50%;
+  }
+
+  #lens-rim {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 5;
+    border: 2.5px solid #7e5d3f;
+  }
+
+  #zoom-badge {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    background: #534AB7;
+    color: #fff;
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 20px;
+    pointer-events: none;
+    z-index: 10;
+    display: none;
+    font-family: -apple-system, sans-serif;
+  }
+
+  #hint {
+    text-align: center;
+    font-size: 0.73rem;
+    color: #888780;
+    margin-top: 0.6rem;
+  }
+
+  .mermaid { font-size: 13px; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Dustbuster — system diagram</h1>
+  <p>Hover to explore. Scroll wheel adjusts magnification. For vertical scroll, hold down a mouse button while scrolling</p>
+</header>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:#EF9F27"></div>⏩Triggers</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#1D9E75"></div>🔁Automated processes</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#7F77DD"></div>🎛️Decisions</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#D85A30"></div>🎚️Your manual steps</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#888780"></div>⏯️Start / end</div>
+</div>
+
+<div id="diagram-wrap">
+  <div id="diagram-inner">
+    <div class="mermaid">
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#EEEDFE', 'primaryBorderColor': '#534AB7', 'primaryTextColor': '#26215C', 'lineColor': '#888780', 'secondaryColor': '#E1F5EE', 'tertiaryColor': '#FAEEDA', 'fontSize': '13px'}}}%%
+flowchart TD
+    DAILY["Daily trigger\n8am"] --> SORT["runInboxSorting()"]
+    TENDAY["Daily trigger 7am\nfires every 10 days"] --> GATEWAY["dustbusterMasterGateway()"]
+    MONTHLY["Monthly trigger\n2nd at 2am"] --> HIBCHECK["runHibernationCheck()"]
+
+    SORT --> EXC{"Matches\nException?"}
+    EXC -->|"Yes"| SKIP["Skip — leave untouched"]
+    EXC -->|"No"| DRULE{"Matches\nDumpster-Fire rule?"}
+    DRULE -->|"Yes"| DUMP["Label 03-Dumpster-Fire\narchive"]
+    DRULE -->|"No"| NRULE{"Matches\nNoise rule?"}
+    NRULE -->|"Yes"| NOISE["Label Noise\narchive"]
+    NRULE -->|"No"| AUTO{"Matches\nLayer-1 auto-pattern?"}
+    AUTO -->|"Yes"| DUMP
+    AUTO -->|"No"| INBOX["Stays in inbox\nunlabeled"]
+
+    GATEWAY --> G1["1. Archive sweep"]
+    G1 --> G2["2. Rescue scan"]
+    G2 --> G3["3. Purge old Dumpster-Fire"]
+    G3 --> G4["4. Learning algorithm"]
+    G4 --> G5["5. Outreach check"]
+    G5 --> G6["6. Wake-on-reply check"]
+    G6 --> G7["7. Write 10-day summary"]
+    G7 --> G8["8. Schedule calendar reminder"]
+    G8 --> G9["9. Update status panel"]
+
+    G1 --> SWEEP1["01-Review-Pending over 30 days\n→ 03-Dumpster-Fire"]
+    G1 --> SWEEP2["02 or 03 in inbox over 30 days\n→ archive"]
+    G1 --> SWEEP3["Transient exception over 45 days\n→ 01-Review-Pending"]
+    G1 --> SWEEP4["Permanent exception over 10 years\n→ 01-Review-Pending"]
+
+    G3 --> PURGECHK{"03-Dumpster-Fire\nover 75 days?"}
+    PURGECHK -->|"Yes"| TRASH["Move to Trash\nauto-deleted day 105"]
+
+    G4 --> LEARN["Scan 03-Dumpster-Fire\nfind repeat senders"]
+    LEARN --> SUGGEST["Write to\nSuggested-Rules tab"]
+    SUGGEST -.->|"you review,\nmark YES"| PROMOTE["promoteApprovedRules()"]
+    PROMOTE --> DRULE
+
+    G5 --> OUTCHK{"Outreach/Waiting\nhas reply?"}
+    OUTCHK -->|"Yes"| REPLIED["Label Outreach/Replied\nlog to sheet"]
+    OUTCHK -->|"No — over 10 days"| OVERDUE["Label Follow-Up-Due\nstar thread"]
+    OUTCHK -->|"No — still waiting"| WAIT["Stays Waiting"]
+
+    G6 --> WAKECHK{"Hibernated thread\nhas new reply?"}
+    WAKECHK -->|"Yes"| WAKE["Move back to active label"]
+
+    HIBCHECK --> HIBQ{"Projects/Groups/Orgs\ninactive 9+ months?"}
+    HIBQ -->|"Yes"| HIB["Rename to x-prefix\nhibernated"]
+
+    HUMAN1(["You: send email"]) -.->|"apply manually"| MANUAL["Outreach/Waiting"]
+    MANUAL -.-> OUTCHK
+
+    HUMAN2(["You: review tabs"]) -.-> SUGGEST
+    HUMAN2 -.-> ORGCAND["Org-Candidates tab"]
+
+    DISCOVERY["runOrgDiscovery()\nrun manually"] --> ORGCAND
+    ORGCAND -.->|"you approve"| PROMOTEORG["promoteOrgCandidates()"]
+    PROMOTEORG --> ORGLABEL["Create Orgs/ label\napply retroactively"]
+
+    classDef trigger fill:#FAEEDA,stroke:#854F0B,color:#412402
+    classDef process fill:#E1F5EE,stroke:#0F6E56,color:#04342C
+    classDef decision fill:#EEEDFE,stroke:#534AB7,color:#26215C
+    classDef human fill:#FAECE7,stroke:#993C1D,color:#4A1B0C
+    classDef terminal fill:#F1EFE8,stroke:#5F5E5A,color:#2C2C2A
+
+    class DAILY,TENDAY,MONTHLY trigger
+    class SORT,DUMP,NOISE,INBOX,G1,G2,G3,G4,G5,G6,G7,G8,G9,SWEEP1,SWEEP2,SWEEP3,SWEEP4,TRASH,LEARN,SUGGEST,PROMOTE,REPLIED,OVERDUE,WAIT,WAKE,DISCOVERY,PROMOTEORG,ORGLABEL,SKIP process
+    class EXC,DRULE,NRULE,AUTO,PURGECHK,OUTCHK,WAKECHK,HIBQ decision
+    class HUMAN1,HUMAN2,MANUAL,ORGCAND human
+    class GATEWAY,HIBCHECK terminal
+    </div>
+  </div>
+
+  <div id="lens">
+    <canvas id="lens-canvas" width="220" height="220"></canvas>
+    <div id="lens-rim"></div>
+  </div>
+  <div id="zoom-badge">2×</div>
+</div>
+
+<p id="hint">Hover to magnify &nbsp;·&nbsp; scroll wheel to adjust zoom &nbsp;·&nbsp; works best in a browser</p>
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>
+mermaid.initialize({ startOnLoad: true, securityLevel: 'loose' });
+
+const wrap    = document.getElementById('diagram-wrap');
+const inner   = document.getElementById('diagram-inner');
+const lens    = document.getElementById('lens');
+const canvas  = document.getElementById('lens-canvas');
+const ctx     = canvas.getContext('2d');
+const badge   = document.getElementById('zoom-badge');
+
+const LSIZE    = 220;
+const HALF     = LSIZE / 2;
+const MIN_Z    = 1; // lens zoom minimum
+const MAX_Z    = 8; // lens zoom maximum
+const SVG_PAD  = 150; // Plentiful padding so nothing clips at the borders
+
+let scale     = 2;
+let mouseX    = 0;
+let mouseY    = 0;
+let rafId     = null;
+let inside    = false;
+let svgImg    = null;
+let badgeTimeout = null;
+
+function buildSvgImage(cb) {
+  const svg = inner.querySelector('svg');
+  if (!svg) { setTimeout(() => buildSvgImage(cb), 200); return; }
+
+  // Use the native viewBox dimensions to establish the absolute internal coordinates
+  const viewBox = svg.viewBox.baseVal;
+  const svgWidth  = viewBox.width  || svg.getBoundingClientRect().width  || 800;
+  const svgHeight = viewBox.height || svg.getBoundingClientRect().height || 600;
+
+  const clone = svg.cloneNode(true);
+  
+  // Strip explicit styles that might interfere with custom sizing inside the image matrix
+  clone.removeAttribute('style');
+  
+  const totalWidth  = svgWidth + (SVG_PAD * 2);
+  const totalHeight = svgHeight + (SVG_PAD * 2);
+
+  clone.setAttribute('width',  totalWidth);
+  clone.setAttribute('height', totalHeight);
+  
+  // Shift the viewport window to perfectly accommodate the padding injection
+  clone.setAttribute('viewBox', `${viewBox.x - SVG_PAD} ${viewBox.y - SVG_PAD} ${totalWidth} ${totalHeight}`);
+
+  const xml  = new XMLSerializer().serializeToString(clone);
+  const blob = new Blob([xml], { type: 'image/svg+xml;charset=utf-8' });
+  const url  = URL.createObjectURL(blob);
+  const img  = new Image();
+
+  img.onload = function() {
+    svgImg = img;
+    svgImg._w = svgWidth;
+    svgImg._h = svgHeight;
+    URL.revokeObjectURL(url);
+    if (cb) cb();
+  };
+  img.src = url;
+}
+
+function drawLens() {
+  if (!svgImg || !inside) return;
+
+  const svg = inner.querySelector('svg');
+  if (!svg) return;
+
+  const wRect = wrap.getBoundingClientRect();
+  const sRect = svg.getBoundingClientRect(); // Map to the SVG itself, ignoring parent container dead space
+
+  // Position physical lens over the cursor
+  const lx      = mouseX - HALF;
+  const ly      = mouseY - HALF;
+  lens.style.left = lx + 'px';
+  lens.style.top  = ly + 'px';
+
+  // Calculate the ratio between the internal SVG coordinates and the actual rendered pixel width on screen
+  const scaleX  = svgImg._w / sRect.width;
+  const scaleY  = svgImg._h / sRect.height;
+
+  // Track cursor coordinates relative directly to the SVG bounds
+  const relativeX = mouseX - (sRect.left - wRect.left);
+  const relativeY = mouseY - (sRect.top  - wRect.top);
+
+  // Map position natively and center the viewport
+  const srcX = (relativeX * scaleX) + SVG_PAD - (HALF / scale);
+  const srcY = (relativeY * scaleY) + SVG_PAD - (HALF / scale);
+
+  const srcW = LSIZE / scale;
+  const srcH = LSIZE / scale;
+
+  ctx.clearRect(0, 0, LSIZE, LSIZE);
+
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(HALF, HALF, HALF, 0, Math.PI * 2);
+  ctx.clip();
+
+  ctx.drawImage(
+    svgImg,
+    srcX, srcY,
+    srcW, srcH,
+    0, 0, LSIZE, LSIZE
+  );
+
+  // Crosshairs
+/*  ctx.strokeStyle = 'rgba(175,169,236,0.35)';
+  ctx.lineWidth = 0.5;
+  ctx.beginPath(); ctx.moveTo(HALF, 0); ctx.lineTo(HALF, LSIZE); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(0, HALF); ctx.lineTo(LSIZE, HALF); ctx.stroke();
+*/
+  ctx.restore();
+}
+
+function frame() {
+  drawLens();
+  rafId = requestAnimationFrame(frame);
+}
+
+wrap.addEventListener('mouseenter', function() {
+  inside = true;
+  lens.style.display = 'block';
+  if (!rafId) rafId = requestAnimationFrame(frame);
+  if (!svgImg) buildSvgImage();
+});
+
+wrap.addEventListener('mouseleave', function() {
+  inside = false;
+  lens.style.display = 'none';
+  badge.style.display = 'none';
+  if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+});
+
+wrap.addEventListener('mousemove', function(e) {
+  const r = wrap.getBoundingClientRect();
+  mouseX  = e.clientX - r.left;
+  mouseY  = e.clientY - r.top;
+});
+
+/*
+wrap.addEventListener('wheel', function(e) {
+  e.preventDefault();
+  const delta = e.deltaY > 0 ? -0.25 : 0.25;
+  scale = Math.min(MAX_Z, Math.max(MIN_Z, scale + delta));
+
+  badge.textContent = scale.toFixed(1) + '×';
+  badge.style.display = 'block';
+  clearTimeout(badgeTimeout);
+  badgeTimeout = setTimeout(() => { badge.style.display = 'none'; }, 1200);
+}, { passive: false });
+*/
+  
+wrap.addEventListener('wheel', function(e) {
+  // If ANY mouse button is held down (e.buttons > 0), 
+  // do not zoom. Let the default page scrolling happen instead.
+  if (e.buttons > 0) {
+    return; 
+  }
+
+  // Otherwise, run your magnifier zoom logic
+  e.preventDefault();
+  const delta = e.deltaY > 0 ? -0.25 : 0.25;
+  scale = Math.min(MAX_Z, Math.max(MIN_Z, scale + delta));
+
+  badge.textContent = scale.toFixed(1) + '×';
+  badge.style.display = 'block';
+  clearTimeout(badgeTimeout);
+  badgeTimeout = setTimeout(() => { badge.style.display = 'none'; }, 1200);
+}, { passive: false });
+
+setTimeout(() => buildSvgImage(), 800);
+</script>
+</body>
+</html>
