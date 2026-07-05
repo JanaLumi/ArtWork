@@ -1,0 +1,22 @@
+filename,title,material,support,width_cm,height_cm,shape,year,description,uv_active,colour1_r,colour1_g,colour1_b,colour2_r,colour2_g,colour2_b,colour3_r,colour3_g,colour3_b,colour4_r,colour4_g,colour4_b,framed,price_eur,available
+01 mdf.jpg,Vesi,acrylic,mdf,30,30,square,2021,Deep blues pooling at the edges — a quiet study in stillness and depth.,no,30,60,120,15,35,80,180,200,220,,,, no,280,yes
+02 mdf.jpg,Tuli,acrylic,mdf,30,30,square,2021,Burnt oranges and deep reds layered and scraped back.,no,200,80,30,160,40,10,240,160,60,,,,no,280,yes
+03 mdf.jpg,Maa,acrylic,mdf,30,30,square,2022,Earth tones — raw umber and ochre. The kind of ground that holds things.,no,140,100,60,190,150,90,80,55,30,,,,no,280,yes
+04 mdf.jpg,Ilma,acrylic,mdf,30,30,square,2022,Pale greys and soft whites with a faint warm undertone. Space to breathe.,no,220,218,210,180,178,172,245,242,235,,,,no,280,yes
+05 mdf.jpg,Varjo,acrylic,mdf,30,30,square,2022,Near-black with violet shadow — changes with the light in the room.,yes,30,25,40,80,60,100,50,40,65,,,,no,320,yes
+06 mdf.jpg,Kasvit,acrylic,mdf,30,30,square,2023,Forest greens — soft sage and the yellow-white of light through leaves.,no,60,110,70,140,170,120,220,215,170,,,,no,280,yes
+07 mdf.jpg,Hämärä,acrylic,mdf,30,30,square,2023,Dusk colours — rose and dusty mauve and the grey-blue of sky just after sunset.,yes,190,140,160,140,120,150,100,120,160,,,,no,320,yes
+08 mdf.jpg,Jää,acrylic,mdf,30,30,square,2023,Whites and cold blues — thin layers that feel translucent. Finnish winter.,no,210,225,235,160,190,215,240,245,250,,,,no,280,yes
+1-_MG_2374_sm.jpg,Untitled I,mixed media,futon canvas,45,60,irregular,2020,Large irregular canvas with layered texture. Warm ochres and raw marks.,no,180,140,80,120,90,50,210,185,130,,,,open,,yes
+2-_MG_2376_sm.jpg,Untitled II,mixed media,futon canvas,50,70,irregular,2020,Dark ground with gestural marks in pale grey and rust.,no,40,35,30,190,185,175,160,70,40,,,,open,,yes
+3-_MG_2377_sm.jpg,Untitled III,mixed media,futon canvas,40,55,irregular,2020,Sage green ground with pale marks. Quiet and botanical.,no,130,155,120,200,210,190,80,100,75,,,,open,,yes
+4-_MG_2379_sm.png,Untitled IV,mixed media,futon canvas,55,65,irregular,2020,Terracotta and warm sand. Heat and texture.,no,195,110,70,220,180,130,150,80,50,,,,open,,yes
+5-_MG_2381_sm.png,Untitled V,mixed media,futon canvas,48,62,irregular,2021,Indigo and pale yellow — a tension between dark and light that resolves quietly.,yes,50,50,120,230,220,160,80,75,140,,,,open,,yes
+7-_MG_2383_sm.png,Untitled VII,mixed media,futon canvas,52,68,irregular,2021,Deep forest — almost black greens. Presence.,no,30,60,40,60,100,65,20,40,25,,,,open,,yes
+8-_MG_2384_sm.png,Untitled VIII,mixed media,futon canvas,44,58,irregular,2021,Warm rose and raw linen. Soft but not delicate.,no,210,155,145,230,200,180,170,110,100,,,,open,,yes
+9-_MG_2385.png,Untitled IX,mixed media,futon canvas,60,75,irregular,2021,The largest futon canvas. Layered blues and greys with marks in white. Like looking up.,yes,80,100,130,150,160,175,230,232,235,,,,open,,yes
+City_sm.jpg,City,acrylic,hardboard,40,40,square,2019,Grey and concrete and the unexpected warmth of human density.,no,120,120,125,80,80,85,200,175,130,,,,no,350,yes
+Landscape_sm.jpg,Landscape,acrylic,hardboard,40,40,square,2019,Horizon line — open sky and Finnish flatness. Space without emptiness.,no,160,185,200,100,140,100,220,215,200,,,,no,350,yes
+Meadow_sm.jpg,Meadow,acrylic,hardboard,40,40,square,2020,Summer yellows and greens. The kind of afternoon that lasts.,no,190,195,100,130,160,80,240,225,150,,,,no,350,yes
+Other_World_sm.jpg,Other World,acrylic,hardboard,40,40,square,2020,Deep purples and electric blues with a single point of light. Speculative and otherworldly.,yes,60,20,100,20,40,140,220,200,80,,,,no,380,yes
+Tree_sm.jpg,Tree,acrylic,hardboard,40,40,square,2020,A single tree — spare and direct. Not symbolic. Just itself.,no,60,80,50,160,180,130,200,195,170,,,,no,350,yes
