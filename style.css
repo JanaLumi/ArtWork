@@ -17,14 +17,10 @@
   font-style: normal;
 }
 
-/* ── Tokens ── */
+/* ── Static tokens ── */
 :root {
-  --ink:        #1C1C1A;
-  --paper:      #F2EDE4;
   --umber:      #8B6F4E;
-  --mid:        #C4B8A8;
   --forest:     #2E4A3E;
-  --light-mid:  #E5DFD5;
 
   --font-body:  'Merriweather', Georgia, serif;
   --font-mono:  'DMMono', 'Courier New', monospace;
@@ -32,6 +28,21 @@
   --radius:     2px;
   --gap:        1.5rem;
   --max:        1100px;
+
+  /* Theme tokens — defaults are deep night (space mode) */
+  /* Set dynamically by atmosphere.js                    */
+  --theme-bg:      #0E0E12;
+  --theme-surface: #141418;
+  --theme-border:  #2A2A3A;
+  --theme-text:    #E8E4DC;
+  --theme-mid:     #7A7468;
+  --theme-accent:  #8B6F4E;
+
+  /* Aliases used throughout */
+  --ink:        var(--theme-text);
+  --paper:      var(--theme-bg);
+  --mid:        var(--theme-mid);
+  --light-mid:  var(--theme-border);
 }
 
 /* ── Reset ── */
@@ -40,9 +51,10 @@ html { font-size: 16px; scroll-behavior: smooth; }
 
 body {
   font-family: var(--font-body);
-  background: var(--paper);
-  color: var(--ink);
+  background: var(--theme-bg);
+  color: var(--theme-text);
   line-height: 1.7;
+  transition: background 1.4s ease, color 0.8s ease;
 }
 
 a { color: var(--umber); text-decoration: none; }
@@ -60,7 +72,8 @@ section {
 }
 
 section + section {
-  border-top: 1px solid var(--light-mid);
+  border-top: 1px solid var(--theme-border);
+  transition: border-color 0.8s ease;
 }
 
 /* ── Typography ── */
@@ -96,9 +109,10 @@ nav {
   position: sticky;
   top: 0;
   z-index: 100;
-  background: var(--paper);
-  border-bottom: 1px solid var(--light-mid);
+  background: var(--theme-bg);
+  border-bottom: 1px solid var(--theme-border);
   padding-block: 1rem;
+  transition: background 1.4s ease, border-color 0.8s ease;
 }
 
 .nav-inner {
@@ -601,12 +615,13 @@ textarea {
 }
 
 footer {
-  border-top: 1px solid var(--light-mid);
+  border-top: 1px solid var(--theme-border);
   padding-block: 2rem;
   font-family: var(--font-mono);
   font-size: 0.7rem;
-  color: var(--mid);
+  color: var(--theme-mid);
   letter-spacing: 0.04em;
+  transition: border-color 0.8s ease;
 }
 
 .footer-inner {
@@ -633,20 +648,8 @@ footer {
    Additions — atmosphere, toggle, lightbox, city typeahead
    ============================================================ */
 
-/* ── Theme variables (set by atmosphere.js) ── */
-:root {
-  --theme-bg:     #1C1C1A;
-  --theme-border: #2E4A3E;
-  --theme-accent: #8B6F4E;
-  --theme-text:   #F2EDE4;
-  --theme-mid:    #8A8070;
-}
-
-/* Only these elements respond to theme — never images or search UI */
-body { background: var(--theme-bg); color: var(--theme-text); transition: background 1.2s ease, color 0.6s ease; }
-nav  { background: var(--theme-bg); border-color: var(--theme-border); }
-footer { border-color: var(--theme-border); }
-#artwork-programme { background: var(--forest); } /* always forest green */
+/* ── Theme — artwork-programme is always forest green regardless of mood ── */
+#artwork-programme { background: var(--forest) !important; }
 
 /* ── Nav controls ── */
 .nav-controls {
@@ -664,8 +667,9 @@ footer { border-color: var(--theme-border); }
 }
 
 .atm-icon {
-  font-size: 0.85rem;
-  opacity: 0.6;
+  font-size: 1rem;
+  opacity: 0.7;
+  line-height: 1;
 }
 
 .toggle-switch {
@@ -678,30 +682,37 @@ footer { border-color: var(--theme-border); }
 
 .toggle-track {
   display: block;
-  width: 2.4rem;
-  height: 1.2rem;
-  background: rgba(255,255,255,0.1);
-  border: 1px solid rgba(255,255,255,0.2);
+  width: 3rem;
+  height: 1.4rem;
+  background: rgba(40, 40, 80, 0.6);
+  border: 1px solid rgba(100, 100, 180, 0.3);
   border-radius: 1rem;
   position: relative;
-  transition: background 0.2s;
+  transition: background 0.3s, border-color 0.3s;
 }
 
 .toggle-switch input:checked + .toggle-track {
-  background: var(--umber);
+  background: rgba(80, 60, 30, 0.6);
+  border-color: rgba(180, 140, 60, 0.4);
 }
 
 .toggle-thumb {
   position: absolute;
   top: 2px; left: 2px;
-  width: 0.85rem; height: 0.85rem;
-  background: var(--paper);
+  width: 1rem; height: 1rem;
+  background: #E8E4DC;
   border-radius: 50%;
-  transition: transform 0.2s;
+  transition: transform 0.25s ease;
+  box-shadow: 0 0 6px 2px rgba(120, 120, 220, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.55rem;
 }
 
 .toggle-switch input:checked + .toggle-track .toggle-thumb {
-  transform: translateX(1.2rem);
+  transform: translateX(1.6rem);
+  box-shadow: 0 0 8px 3px rgba(220, 160, 60, 0.6);
 }
 
 /* ── Atmosphere label ── */
