@@ -1,25 +1,61 @@
 /* ============================================================
    Art@Work — main.js
+   Parses artworks.csv directly via PapaParse (CDN)
    ============================================================ */
 
 const ARTWORK_BASE = 'https://raw.githubusercontent.com/JanaLumi/ArtWork/main/artworks/paintings/';
-const COLOUR_TOLERANCE = 60; // Euclidean distance threshold for fuzzy colour matching
+const COLOUR_TOLERANCE = 60;
 
 let allPaintings = [];
 let lastSearch = {};
 
-/* ── Load data ── */
-async function init() {
-  try {
-    const res = await fetch('artworks.json');
-    allPaintings = await res.json();
-    renderResults(allPaintings);
-    initColourPicker();
-    initAccordion();
-    initPaletteBar();
-  } catch (err) {
-    console.error('Could not load artworks.json', err);
+/* ── Load and parse CSV ── */
+function init() {
+  Papa.parse('artworks.csv', {
+    download: true,
+    header: true,
+    skipEmptyLines: true,
+    dynamicTyping: true,
+    complete: ({ data }) => {
+      allPaintings = data.map(normalisePainting);
+      renderResults(allPaintings);
+      initColourPicker();
+      initAccordion();
+      initPaletteBar();
+      bindSearch();
+      bindRequestForm();
+    },
+    error: (err) => console.error('Could not load artworks.csv', err)
+  });
+}
+
+/* ── Normalise a CSV row into a usable object ── */
+function normalisePainting(row) {
+  // Build colours array from up to 4 RGB triplets
+  const colours = [];
+  for (let i = 1; i <= 4; i++) {
+    const r = row[`colour${i}_r`];
+    const g = row[`colour${i}_g`];
+    const b = row[`colour${i}_b`];
+    if (r !== '' && r != null) colours.push({ r: +r, g: +g, b: +b });
   }
+
+  return {
+    filename:    row.filename,
+    title:       row.title || row.filename,
+    material:    row.material,
+    support:     row.support,
+    width_cm:    row.width_cm,
+    height_cm:   row.height_cm,
+    shape:       row.shape,
+    year:        row.year,
+    description: row.description,
+    colours,
+    uv_active:   row.uv_active === true || String(row.uv_active).toLowerCase() === 'yes',
+    framed:      row.framed,
+    price_eur:   row.price_eur || null,
+    available:   row.available === true || String(row.available).toLowerCase() === 'yes'
+  };
 }
 
 /* ── Colour utilities ── */
@@ -51,7 +87,7 @@ function paintingMatchesColour(painting, targetRgb) {
   return painting.colours.some(c => colourDistance(c, targetRgb) <= COLOUR_TOLERANCE);
 }
 
-/* ── Palette bar (signature element) ── */
+/* ── Palette bar ── */
 function initPaletteBar() {
   updatePaletteBar([]);
 }
@@ -59,13 +95,9 @@ function initPaletteBar() {
 function updatePaletteBar(colours) {
   const bar = document.getElementById('palette-bar');
   if (!bar) return;
-
   bar.innerHTML = '';
-
-  // Default: show a gentle gradient of the brand palette
   const defaults = ['#1C1C1A', '#2E4A3E', '#8B6F4E', '#C4B8A8', '#F2EDE4'];
   const toShow = colours.length > 0 ? colours : defaults;
-
   toShow.forEach(hex => {
     const seg = document.createElement('div');
     seg.className = 'palette-segment';
@@ -76,29 +108,25 @@ function updatePaletteBar(colours) {
 
 /* ── Colour picker sync ── */
 function initColourPicker() {
-  const picker = document.getElementById('colour-picker');
-  const rInput = document.getElementById('colour-r');
-  const gInput = document.getElementById('colour-g');
-  const bInput = document.getElementById('colour-b');
+  const picker  = document.getElementById('colour-picker');
+  const rInput  = document.getElementById('colour-r');
+  const gInput  = document.getElementById('colour-g');
+  const bInput  = document.getElementById('colour-b');
   const hexInput = document.getElementById('colour-hex');
-
   if (!picker) return;
 
   picker.addEventListener('input', () => {
     const rgb = hexToRgb(picker.value);
-    rInput.value = rgb.r;
-    gInput.value = rgb.g;
-    bInput.value = rgb.b;
+    rInput.value  = rgb.r;
+    gInput.value  = rgb.g;
+    bInput.value  = rgb.b;
     hexInput.value = picker.value.toUpperCase();
     updatePaletteBar([picker.value]);
   });
 
   function syncFromRgb() {
-    const r = parseInt(rInput.value) || 0;
-    const g = parseInt(gInput.value) || 0;
-    const b = parseInt(bInput.value) || 0;
-    const hex = rgbToHex(r, g, b);
-    picker.value = hex;
+    const hex = rgbToHex(+rInput.value || 0, +gInput.value || 0, +bInput.value || 0);
+    picker.value   = hex;
     hexInput.value = hex.toUpperCase();
     updatePaletteBar([hex]);
   }
@@ -106,13 +134,13 @@ function initColourPicker() {
   function syncFromHex() {
     const hex = hexInput.value.trim();
     if (/^#?[0-9a-fA-F]{6}$/.test(hex)) {
-      const normalised = hex.startsWith('#') ? hex : '#' + hex;
-      picker.value = normalised;
-      const rgb = hexToRgb(normalised);
+      const n = hex.startsWith('#') ? hex : '#' + hex;
+      picker.value = n;
+      const rgb = hexToRgb(n);
       rInput.value = rgb.r;
       gInput.value = rgb.g;
       bInput.value = rgb.b;
-      updatePaletteBar([normalised]);
+      updatePaletteBar([n]);
     }
   }
 
@@ -123,9 +151,9 @@ function initColourPicker() {
 /* ── Search ── */
 function getSearchParams() {
   const colourActive = document.getElementById('filter-colour')?.checked;
-  const uvOnly = document.getElementById('filter-uv')?.checked;
-  const shapeVal = document.getElementById('filter-shape')?.value;
-  const supportVal = document.getElementById('filter-support')?.value;
+  const uvOnly       = document.getElementById('filter-uv')?.checked;
+  const shapeVal     = document.getElementById('filter-shape')?.value;
+  const supportVal   = document.getElementById('filter-support')?.value;
 
   let colourRgb = null;
   if (colourActive) {
@@ -138,7 +166,6 @@ function getSearchParams() {
 
 function applySearch(params) {
   lastSearch = params;
-
   return allPaintings.filter(p => {
     if (!p.available) return false;
     if (params.uvOnly && !p.uv_active) return false;
@@ -150,7 +177,7 @@ function applySearch(params) {
 }
 
 function renderResults(paintings) {
-  const grid = document.getElementById('paintings-grid');
+  const grid  = document.getElementById('paintings-grid');
   const count = document.getElementById('results-count');
   if (!grid) return;
 
@@ -164,15 +191,13 @@ function renderResults(paintings) {
   }
 
   grid.innerHTML = paintings.map(p => {
-    const imgSrc = ARTWORK_BASE + encodeURIComponent(p.filename);
+    const imgSrc   = ARTWORK_BASE + encodeURIComponent(p.filename);
     const swatches = p.colours.map(c =>
       `<span class="swatch" style="background:rgb(${c.r},${c.g},${c.b})" title="rgb(${c.r},${c.g},${c.b})"></span>`
     ).join('');
     const uvBadge = p.uv_active ? `<div class="uv-badge">UV active</div>` : '';
-    const price = p.price_eur
-      ? `€${p.price_eur}`
-      : (p.framed === 'open' ? 'Contact for price' : 'POA');
-    const dims = `${p.width_cm} × ${p.height_cm} cm`;
+    const price   = p.price_eur ? `€${p.price_eur}` : (p.framed === 'open' ? 'Contact for price' : 'POA');
+    const dims    = `${p.width_cm} × ${p.height_cm} cm`;
 
     return `
       <article class="painting-card" data-filename="${p.filename}">
@@ -193,49 +218,38 @@ function renderResults(paintings) {
   }).join('');
 }
 
-/* ── Search button ── */
+/* ── Search buttons ── */
 function bindSearch() {
-  const btn = document.getElementById('btn-search');
-  if (!btn) return;
-  btn.addEventListener('click', () => {
-    const params = getSearchParams();
+  document.getElementById('btn-search')?.addEventListener('click', () => {
+    const params  = getSearchParams();
     const results = applySearch(params);
     renderResults(results);
-
-    // Scroll to results
     document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
-
-    // If colour filter active, update palette bar with search colour
     if (params.colourRgb) {
-      const hex = rgbToHex(params.colourRgb.r, params.colourRgb.g, params.colourRgb.b);
-      updatePaletteBar([hex]);
+      updatePaletteBar([rgbToHex(params.colourRgb.r, params.colourRgb.g, params.colourRgb.b)]);
     }
   });
 
-  const btnReset = document.getElementById('btn-reset');
-  if (!btnReset) return;
-  btnReset.addEventListener('click', () => {
+  document.getElementById('btn-reset')?.addEventListener('click', () => {
     document.getElementById('filter-colour').checked = false;
-    document.getElementById('filter-uv').checked = false;
-    document.getElementById('filter-shape').value = 'any';
-    document.getElementById('filter-support').value = 'any';
+    document.getElementById('filter-uv').checked     = false;
+    document.getElementById('filter-shape').value    = 'any';
+    document.getElementById('filter-support').value  = 'any';
     updatePaletteBar([]);
     renderResults(allPaintings);
   });
 }
 
-/* ── Accordion (request form) ── */
+/* ── Accordion ── */
 function initAccordion() {
   const trigger = document.getElementById('accordion-trigger');
-  const body = document.getElementById('accordion-body');
+  const body    = document.getElementById('accordion-body');
   if (!trigger || !body) return;
 
   trigger.addEventListener('click', () => {
     const isOpen = body.classList.contains('open');
     body.classList.toggle('open', !isOpen);
     trigger.setAttribute('aria-expanded', String(!isOpen));
-
-    // Prefill from last search when opening
     if (!isOpen) {
       prefillRequestForm();
       body.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -244,60 +258,37 @@ function initAccordion() {
 }
 
 function prefillRequestForm() {
-  // Copy shape filter
-  const shapeEl = document.getElementById('request-shape');
-  if (shapeEl && lastSearch.shapeVal && lastSearch.shapeVal !== 'any') {
-    // check the matching checkbox
-    const cb = shapeEl.querySelector(`input[value="${lastSearch.shapeVal}"]`);
+  if (lastSearch.shapeVal && lastSearch.shapeVal !== 'any') {
+    const cb = document.querySelector(`#request-shape input[value="${lastSearch.shapeVal}"]`);
     if (cb) cb.checked = true;
   }
-
-  // Copy colour
   if (lastSearch.colourRgb) {
     const hex = rgbToHex(lastSearch.colourRgb.r, lastSearch.colourRgb.g, lastSearch.colourRgb.b);
-    const colourField = document.getElementById('request-colour-hex');
-    if (colourField) colourField.value = hex.toUpperCase();
-
+    const field = document.getElementById('request-colour-hex');
+    if (field) field.value = hex.toUpperCase();
     const note = document.getElementById('request-colour-note');
-    if (note) note.textContent = `Colour preference carried over from your search: ${hex.toUpperCase()}`;
+    if (note) note.textContent = `Colour carried over from your search: ${hex.toUpperCase()}`;
   }
-
-  // UV
   if (lastSearch.uvOnly) {
-    const uvCb = document.getElementById('request-uv');
-    if (uvCb) uvCb.checked = true;
+    const cb = document.getElementById('request-uv');
+    if (cb) cb.checked = true;
   }
 }
 
-/* ── Request form submission ── */
+/* ── Request form ── */
 function bindRequestForm() {
-  const form = document.getElementById('request-form');
-  if (!form) return;
-
-  form.addEventListener('submit', async (e) => {
+  document.getElementById('request-form')?.addEventListener('submit', (e) => {
     e.preventDefault();
-    const data = new FormData(form);
+    const data  = new FormData(e.target);
     const entry = Object.fromEntries(data.entries());
-
-    // Collect checkboxes manually
-    entry['art_types'] = [...form.querySelectorAll('input[name="art_type"]:checked')].map(el => el.value).join(', ');
-
-    // For now: log and show confirmation (Google Sheets integration goes here)
+    entry.art_types = [...e.target.querySelectorAll('input[name="art_type"]:checked')]
+      .map(el => el.value).join(', ');
     console.log('Request entry:', entry);
-    showRequestConfirmation();
+    // Google Sheets / Apps Script POST goes here
+    document.getElementById('request-form').style.display  = 'none';
+    document.getElementById('request-confirmation').style.display = 'block';
   });
 }
 
-function showRequestConfirmation() {
-  const form = document.getElementById('request-form');
-  const conf = document.getElementById('request-confirmation');
-  if (form) form.style.display = 'none';
-  if (conf) conf.style.display = 'block';
-}
-
 /* ── Boot ── */
-document.addEventListener('DOMContentLoaded', () => {
-  init();
-  bindSearch();
-  bindRequestForm();
-});
+document.addEventListener('DOMContentLoaded', init);
