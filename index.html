@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Art@Work — Living art for living spaces</title>
+  <meta name="description" content="Art@Work connects artists with companies and spaces that want living, contemporary work — and brings artists into engineering and science environments as storytellers.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ── Navigation ── -->
+  <nav aria-label="Main navigation">
+    <div class="container nav-inner">
+      <span class="nav-logo">Art@Work</span>
+      <ul class="nav-links">
+        <li><a href="#search">Find art</a></li>
+        <li><a href="#artwork-programme">Programme</a></li>
+        <li><a href="#about">About</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ── Hero ── -->
+  <section id="hero">
+    <div class="container">
+      <div class="hero-statement">
+        <p class="eyebrow">Art@Work</p>
+        <h1>Art is work.<br>It belongs in the spaces where work happens.</h1>
+        <p>Art@Work connects spaces that want living, contemporary art with artists who make it — and brings artists into engineering and science environments as storytellers, not decoration.</p>
+        <div class="zone-links">
+          <a href="#search" class="btn btn-ink">Find art for your space</a>
+          <a href="#artwork-programme" class="btn btn-forest">Art@Work programme</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Search zone ── -->
+  <section id="search">
+    <div class="container">
+      <p class="eyebrow">Find art for your space</p>
+      <h2>Search paintings</h2>
+      <p>Browse available works. Filter by colour, material, or shape. If nothing fits, make a request below — I'll reach out to my network.</p>
+
+      <!-- Palette bar -->
+      <div id="palette-bar" aria-hidden="true"></div>
+
+      <!-- Filters -->
+      <div class="search-grid">
+
+        <!-- Colour filter -->
+        <div class="field-group full">
+          <label>
+            <input type="checkbox" id="filter-colour">
+            Filter by colour
+          </label>
+          <div class="colour-row" style="margin-top:0.75rem;">
+            <input type="color" id="colour-picker" value="#8B6F4E" title="Pick a colour">
+            <div class="colour-inputs">
+              <span>R</span>
+              <input type="number" id="colour-r" min="0" max="255" value="139" aria-label="Red value">
+              <span>G</span>
+              <input type="number" id="colour-g" min="0" max="255" value="111" aria-label="Green value">
+              <span>B</span>
+              <input type="number" id="colour-b" min="0" max="255" value="78" aria-label="Blue value">
+              <span>HEX</span>
+              <input type="text" id="colour-hex" value="#8B6F4E" maxlength="7" aria-label="Hex colour value" style="width:6rem;">
+            </div>
+          </div>
+        </div>
+
+        <!-- Shape -->
+        <div class="field-group">
+          <label for="filter-shape">Shape</label>
+          <select id="filter-shape">
+            <option value="any">Any shape</option>
+            <option value="square">Square / rectangular</option>
+            <option value="irregular">Irregular (futon canvas)</option>
+          </select>
+        </div>
+
+        <!-- Support -->
+        <div class="field-group">
+          <label for="filter-support">Surface</label>
+          <select id="filter-support">
+            <option value="any">Any surface</option>
+            <option value="mdf">MDF</option>
+            <option value="hardboard">Hardboard</option>
+            <option value="futon canvas">Futon canvas</option>
+          </select>
+        </div>
+
+        <!-- UV active -->
+        <div class="field-group full">
+          <div class="checkbox-group">
+            <label>
+              <input type="checkbox" id="filter-uv">
+              UV active only — works that glow or shift under ultraviolet light
+            </label>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="search-actions full">
+          <button class="btn btn-ink" id="btn-search">Search</button>
+          <button class="btn" id="btn-reset" style="color:var(--mid);border-color:var(--mid);">Reset</button>
+        </div>
+
+      </div>
+
+      <!-- Results -->
+      <div id="results">
+        <p class="results-count" id="results-count"></p>
+        <div class="paintings-grid" id="paintings-grid"></div>
+      </div>
+
+      <!-- Request accordion -->
+      <div id="request-accordion">
+        <button
+          class="accordion-trigger"
+          id="accordion-trigger"
+          aria-expanded="false"
+          aria-controls="accordion-body"
+        >
+          <span>Didn't find what you were looking for? Make a request</span>
+          <span class="chevron" aria-hidden="true">▾</span>
+        </button>
+
+        <div class="accordion-body" id="accordion-body" role="region" aria-labelledby="accordion-trigger">
+
+          <p style="color:var(--mid);font-family:var(--font-mono);font-size:0.78rem;margin-bottom:1.5rem;max-width:60ch;">
+            Your request will be added to a public database that artists can browse directly.
+            They may contact you with existing work or commission proposals.
+            By submitting, you agree to your request being visible to artists in the network.
+          </p>
+
+          <form class="request-form" id="request-form" novalidate>
+
+            <!-- Contact -->
+            <div class="field-group">
+              <label for="req-name">Your name *</label>
+              <input type="text" id="req-name" name="name" required>
+            </div>
+
+            <div class="field-group">
+              <label for="req-email">Email address *</label>
+              <input type="text" id="req-email" name="email" required>
+            </div>
+
+            <div class="field-group full">
+              <label for="req-org">Organisation or space (optional)</label>
+              <input type="text" id="req-org" name="organisation">
+            </div>
+
+            <!-- Description -->
+            <div class="field-group full">
+              <label for="req-description">What are you looking for? *</label>
+              <textarea id="req-description" name="description" rows="4" required
+                placeholder="Describe the space, the feeling you want, any context that's useful."></textarea>
+            </div>
+
+            <!-- Space photo URL -->
+            <div class="field-group full">
+              <label for="req-url">Link to photos of the space (optional)</label>
+              <input type="text" id="req-url" name="space_url"
+                placeholder="Google Drive, Dropbox, website, etc. — open/public link only">
+            </div>
+
+            <!-- Art types -->
+            <div class="field-group full" id="request-shape">
+              <label>Type of work (select all that apply)</label>
+              <div class="checkbox-group">
+                <label><input type="checkbox" name="art_type" value="painting"> Painting</label>
+                <label><input type="checkbox" name="art_type" value="print_poster"> Print / poster</label>
+                <label><input type="checkbox" name="art_type" value="sculpture"> Sculpture</label>
+                <label><input type="checkbox" name="art_type" value="installation"> Installation</label>
+                <label><input type="checkbox" name="art_type" value="mobile"> Mobile / kinetic</label>
+                <label><input type="checkbox" name="art_type" value="textile"> Textile / wall hanging</label>
+                <label><input type="checkbox" name="art_type" value="other"> Other</label>
+              </div>
+            </div>
+
+            <!-- Size -->
+            <div class="field-group">
+              <label for="req-width">Approximate width (cm)</label>
+              <input type="number" id="req-width" name="width_cm" min="1">
+            </div>
+
+            <div class="field-group">
+              <label for="req-height">Approximate height (cm)</label>
+              <input type="number" id="req-height" name="height_cm" min="1">
+            </div>
+
+            <!-- Framing -->
+            <div class="field-group">
+              <label for="req-framing">Framing preference</label>
+              <select id="req-framing" name="framing">
+                <option value="any">No preference</option>
+                <option value="framed">Framed</option>
+                <option value="unframed">Unframed</option>
+                <option value="open">Open to discussion with artist</option>
+              </select>
+            </div>
+
+            <!-- UV -->
+            <div class="field-group">
+              <label>&nbsp;</label>
+              <div class="checkbox-group">
+                <label>
+                  <input type="checkbox" id="request-uv" name="uv_active" value="yes">
+                  UV active preferred
+                </label>
+              </div>
+            </div>
+
+            <!-- Colour note (prefilled from search) -->
+            <div class="field-group full">
+              <label for="request-colour-hex">Colour preference — HEX (optional)</label>
+              <input type="text" id="request-colour-hex" name="colour_hex" maxlength="7"
+                placeholder="#rrggbb">
+              <span class="mono" id="request-colour-note" style="margin-top:0.25rem;font-size:0.68rem;color:var(--mid);"></span>
+            </div>
+
+            <!-- Budget -->
+            <div class="field-group">
+              <label for="req-budget-min">Budget min (€)</label>
+              <input type="number" id="req-budget-min" name="budget_min" min="0"
+                placeholder="e.g. 200">
+            </div>
+
+            <div class="field-group">
+              <label for="req-budget-max">Budget max (€)</label>
+              <input type="number" id="req-budget-max" name="budget_max" min="0"
+                placeholder="e.g. 800">
+            </div>
+
+            <p class="privacy-note">
+              A budget range is required for commission requests. Without one, artists will price their available work themselves.
+              Your contact details will be visible to artists who browse the request database.
+              No payment is processed here — all arrangements are directly between you and the artist.
+            </p>
+
+            <div class="full" style="display:flex;gap:1rem;flex-wrap:wrap;">
+              <button type="submit" class="btn btn-umber">Submit request</button>
+            </div>
+
+          </form>
+
+          <div id="request-confirmation" style="display:none;">
+            <p style="font-family:var(--font-mono);font-size:0.85rem;color:var(--paper);line-height:1.8;">
+              Request received. It will be added to the public database shortly.<br>
+              Artists may contact you directly. I'll also be in touch if I have a strong match in mind.
+            </p>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── Art@Work Programme ── -->
+  <section id="artwork-programme">
+    <div class="container">
+      <p class="eyebrow">Art@Work programme</p>
+      <h2>Artists belong in the rooms where the future is being built.</h2>
+
+      <div class="programme-grid">
+        <div class="programme-block">
+          <h3>The problem</h3>
+          <p>Engineering answers what and how. Artists answer why it matters in human terms. In Finland, where engineers hold significant cultural authority, that gap is visible — and costly. Art that works becomes invisible. Only noticed when it's gone.</p>
+        </div>
+        <div class="programme-block">
+          <h3>The model</h3>
+          <p>Art@Work embeds artists in engineering and science companies as storytellers and visual communicators — with the same access, status, and professional standing as other contributors. Inspired by NASA's Artist in Residence programme, where artists hold equivalent clearance to scientists.</p>
+        </div>
+        <div class="programme-block">
+          <h3>For companies</h3>
+          <p>Living, contemporary work made by people in your city, your time. Not stock imagery, not AI generation. An artist who understands your work and can make it legible to the world outside your walls.</p>
+        </div>
+        <div class="programme-block">
+          <h3>For artists</h3>
+          <p>Professional parity, not patronage. Paid at the rate of a consultant or specialist. Access to environments, networks, and materials that expand your practice — not just a residency stipend and a corner to work in.</p>
+        </div>
+      </div>
+
+      <div class="ireland-stat">
+        <div class="figure">€1.39</div>
+        <p>returned to society for every €1 invested in artists — Ireland's Basic Income for the Arts pilot, evaluated by Alma Economics. The programme has since been made permanent.</p>
+      </div>
+
+      <div class="enquiry-actions">
+        <a href="mailto:hello@artwork.fi?subject=Company enquiry — Art@Work programme" class="btn btn-ink">Company enquiry</a>
+        <a href="mailto:hello@artwork.fi?subject=Artist enquiry — Art@Work programme" class="btn btn-ink">Artist enquiry</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── About ── -->
+  <section id="about">
+    <div class="container">
+      <div class="about-grid">
+        <div>
+          <p class="eyebrow">About</p>
+          <h2>Jane & Lumi / Jana Lumi</h2>
+          <p style="margin-top:1rem;">Art@Work is a programme developed by Jana Lumi — designer, researcher, and artist based in Tampere. The work sits at the intersection of systems thinking, human-technology interaction, and the question of what gets counted as valuable in working life.</p>
+          <p style="margin-top:1rem;">The paintings in this archive were made on MDF, hardboard, and reclaimed futon canvas. Some glow under ultraviolet light. All are available for spaces that want something present and made by hand.</p>
+          <p style="margin-top:1rem;"><a href="https://janalumi.github.io/" target="_blank" rel="noopener">Portfolio →</a></p>
+        </div>
+        <div>
+          <p class="eyebrow" style="margin-bottom:0.75rem;">Also part of this work</p>
+          <p style="font-family:var(--font-mono);font-size:0.75rem;line-height:2;color:var(--umber);">
+            Starwork Academy<br>
+            Design & Posthumanism Network<br>
+            Pispalan Kulttuuriyhdistys<br>
+            Active Inference Institute
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Footer ── -->
+  <footer>
+    <div class="container footer-inner">
+      <span>Art@Work — Jana Lumi / Jane & Lumi</span>
+      <span>Tampere, Finland</span>
+      <span>Art is work.</span>
+    </div>
+  </footer>
+
+  <script src="main.js"></script>
+</body>
+</html>
