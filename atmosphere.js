@@ -227,7 +227,7 @@ function applySpaceMood() {
   // Blend: time of day is primary, season and moon add accent
   const palette = MOOD_PALETTES[tod];
 
-  applyTheme(palette, tod, season, moonName);
+  applyTheme(palette, tod);
   updateAtmosphereLabel(`${formatTimeLabel(tod)} · ${moonName} · ${capitalise(season)}`);
 }
 
@@ -250,26 +250,32 @@ function applyWeatherMood(code, cloudCover, temp) {
   if (temp < -5)  mood = 'cold';
 
   const palette = MOOD_PALETTES[mood];
-  applyTheme(palette, mood, null, null);
+  applyTheme(palette, mood);
   updateAtmosphereLabel(`${capitalise(mood.replace('_', ' '))} · ${Math.round(temp)}°`);
 }
 
 /* ── Apply theme to CSS variables ── */
-// Only touches background and border tokens — never images or search UI
-function applyTheme(palette, tod, season, moonName) {
+// Only touches background and border tokens — never images, colour pickers, or search results
+function applyTheme(palette, tod) {
   if (!palette) return;
-  const root = document.documentElement;
+  const root  = document.documentElement;
+  const dark  = isDarkMood(tod);
 
-  // Only override the theme-able tokens
-  const isDark = isDarkMood(tod);
+  root.style.setProperty('--theme-bg',      '#' + palette.bg);
+  root.style.setProperty('--theme-surface',  '#' + adjustBrightness(palette.bg, dark ? 8 : -5));
+  root.style.setProperty('--theme-border',   '#' + palette.border);
+  root.style.setProperty('--theme-accent',   '#' + palette.accent);
+  root.style.setProperty('--theme-text',     dark ? '#E8E4DC' : '#1C1C1A');
+  root.style.setProperty('--theme-mid',      dark ? '#7A7468' : '#9A9080');
 
-  root.style.setProperty('--theme-bg',     '#' + palette.bg);
-  root.style.setProperty('--theme-border', '#' + palette.border);
-  root.style.setProperty('--theme-accent', '#' + palette.accent);
-  root.style.setProperty('--theme-text',   isDark ? '#E8E4DC' : '#1C1C1A');
-  root.style.setProperty('--theme-mid',    isDark ? '#8A8070' : '#C4B8A8');
+  document.body.setAttribute('data-theme', dark ? 'dark' : 'light');
+}
 
-  document.body.setAttribute('data-theme', isDark ? 'dark' : 'light');
+function adjustBrightness(hex, amount) {
+  return hex.match(/.{2}/g)
+    .map(c => Math.max(0, Math.min(255, parseInt(c, 16) + amount))
+      .toString(16).padStart(2, '0'))
+    .join('');
 }
 
 function isDarkMood(tod) {
