@@ -277,7 +277,7 @@ function prefillRequestForm() {
 
 /* ── Request form ── */
 function bindRequestForm() {
-  document.getElementById('request-form')?.addEventListener('submit', (e) => {
+  document.getElementById('request-form')?.addEventListener('send', (e) => {
     e.preventDefault();
     const data  = new FormData(e.target);
     const entry = Object.fromEntries(data.entries());
