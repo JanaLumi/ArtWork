@@ -3,7 +3,7 @@
    Space/weather toggle · clock · moon phase
    City typeahead (Open-Meteo geocoding) · weather mood
    Theme affects background and borders only —
-   never images, colour pickers, or search results
+   never images, colour pickers, or search results 
    ============================================================ */
 
 const GEOCODING_API = 'https://geocoding-api.open-meteo.com/v1/search';
