@@ -11,14 +11,14 @@ const MAX_SEARCH_COLOURS = 3;
 
 /* ── Lighting types ── */
 const LIGHT_TYPES = [
-  { id: 'daylight',     label: 'Daylight',     icon: 'icons/light-daylight.svg',     filter: 'brightness(1.05) saturate(1.0)' },
-  { id: 'overcast',     label: 'Overcast',     icon: 'icons/light-overcast.svg',     filter: 'brightness(0.95) saturate(0.85) hue-rotate(5deg)' },
-  { id: 'fluorescent',  label: 'Fluorescent',  icon: 'icons/light-fluorescent.svg',  filter: 'brightness(1.0) saturate(0.9) hue-rotate(-8deg)' },
-  { id: 'led',          label: 'LED',          icon: 'icons/light-led.svg',          filter: 'brightness(1.02) saturate(0.95) hue-rotate(2deg)' },
-  { id: 'halogen',      label: 'Halogen',      icon: 'icons/light-halogen.svg',      filter: 'brightness(1.05) saturate(1.1) sepia(0.08)' },
-  { id: 'incandescent', label: 'Incandescent', icon: 'icons/light-incandescent.svg', filter: 'brightness(0.95) saturate(1.2) sepia(0.25) hue-rotate(-5deg)' },
-  { id: 'candlelight',  label: 'Candlelight',  icon: 'icons/light-candlelight.svg',  filter: 'brightness(0.85) saturate(1.4) sepia(0.45) hue-rotate(-10deg)', flicker: true },
-  { id: 'fireplace',    label: 'Fireplace',    icon: 'icons/light-fireplace.svg',    filter: 'brightness(0.8) saturate(1.6) sepia(0.55) hue-rotate(-15deg)', flicker: true, heavy: true },
+  { id: 'daylight',     label: 'Daylight',     icon: 'elements/light-daylight.svg',     filter: 'brightness(1.05) saturate(1.0)' },
+  { id: 'overcast',     label: 'Overcast',     icon: 'elements/light-overcast.svg',     filter: 'brightness(0.95) saturate(0.85) hue-rotate(5deg)' },
+  { id: 'fluorescent',  label: 'Fluorescent',  icon: 'elements/light-fluorescent.svg',  filter: 'brightness(1.0) saturate(0.9) hue-rotate(-8deg)' },
+  { id: 'led',          label: 'LED',          icon: 'elements/light-led.svg',          filter: 'brightness(1.02) saturate(0.95) hue-rotate(2deg)' },
+  { id: 'halogen',      label: 'Halogen',      icon: 'elements/light-halogen.svg',      filter: 'brightness(1.05) saturate(1.1) sepia(0.08)' },
+  { id: 'incandescent', label: 'Incandescent', icon: 'elements/light-incandescent.svg', filter: 'brightness(0.95) saturate(1.2) sepia(0.25) hue-rotate(-5deg)' },
+  { id: 'candlelight',  label: 'Candlelight',  icon: 'elements/light-candlelight.svg',  filter: 'brightness(0.85) saturate(1.4) sepia(0.45) hue-rotate(-10deg)', flicker: true },
+  { id: 'fireplace',    label: 'Fireplace',    icon: 'elements/light-fireplace.svg',    filter: 'brightness(0.8) saturate(1.6) sepia(0.55) hue-rotate(-15deg)', flicker: true, heavy: true },
 ];
 
 /* Default light per time-of-day mood */
