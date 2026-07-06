@@ -740,7 +740,7 @@ footer {
 
 .lang-btn:hover,
 .lang-btn.active {
-  color: var(--paper);
+  color: var(--ink);
   border-color: rgba(255,255,255,0.3);
 }
 
