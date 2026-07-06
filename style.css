@@ -1096,7 +1096,7 @@ footer {
   border-radius: var(--radius);
   padding: 0.3rem;
   cursor: pointer;
-  opacity: 0.5;
+  opacity: 0.8;
   transition: opacity 0.15s, border-color 0.15s;
   display: flex;
   align-items: center;
