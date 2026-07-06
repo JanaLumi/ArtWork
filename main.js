@@ -6,8 +6,43 @@
 
 const ARTWORK_BASE  = 'https://raw.githubusercontent.com/JanaLumi/ArtWork/main/artworks/paintings/';
 const AUDIO_BASE    = 'https://raw.githubusercontent.com/JanaLumi/ArtWork/main/audio/';
-const COLOUR_TOLERANCE = 60;
+const COLOUR_TOLERANCE   = 60;
 const MAX_SEARCH_COLOURS = 3;
+
+/* ── Lighting types ── */
+const LIGHT_TYPES = [
+  { id: 'daylight',     label: 'Daylight',     icon: 'icons/light-daylight.svg',     filter: 'brightness(1.05) saturate(1.0)' },
+  { id: 'overcast',     label: 'Overcast',     icon: 'icons/light-overcast.svg',     filter: 'brightness(0.95) saturate(0.85) hue-rotate(5deg)' },
+  { id: 'fluorescent',  label: 'Fluorescent',  icon: 'icons/light-fluorescent.svg',  filter: 'brightness(1.0) saturate(0.9) hue-rotate(-8deg)' },
+  { id: 'led',          label: 'LED',          icon: 'icons/light-led.svg',          filter: 'brightness(1.02) saturate(0.95) hue-rotate(2deg)' },
+  { id: 'halogen',      label: 'Halogen',      icon: 'icons/light-halogen.svg',      filter: 'brightness(1.05) saturate(1.1) sepia(0.08)' },
+  { id: 'incandescent', label: 'Incandescent', icon: 'icons/light-incandescent.svg', filter: 'brightness(0.95) saturate(1.2) sepia(0.25) hue-rotate(-5deg)' },
+  { id: 'candlelight',  label: 'Candlelight',  icon: 'icons/light-candlelight.svg',  filter: 'brightness(0.85) saturate(1.4) sepia(0.45) hue-rotate(-10deg)', flicker: true },
+  { id: 'fireplace',    label: 'Fireplace',    icon: 'icons/light-fireplace.svg',    filter: 'brightness(0.8) saturate(1.6) sepia(0.55) hue-rotate(-15deg)', flicker: true, heavy: true },
+];
+
+/* Default light per time-of-day mood */
+const MOOD_LIGHT_DEFAULTS = {
+  dawn:       'candlelight',
+  morning:    'daylight',
+  midday:     'daylight',
+  afternoon:  'halogen',
+  dusk:       'incandescent',
+  blue_hour:  'led',
+  evening:    'incandescent',
+  deep_night: 'candlelight',
+  clear:      'daylight',
+  overcast:   'overcast',
+  rain:       'overcast',
+  snow:       'overcast',
+  fog:        'fluorescent',
+  storm:      'led',
+  hot:        'daylight',
+  cold:       'fluorescent',
+};
+
+let currentLightIdx  = 0; // index into LIGHT_TYPES
+let flickerInterval  = null;
 
 let allPaintings  = [];
 let lastSearch    = {};
@@ -58,8 +93,9 @@ function normalisePainting(row) {
     price_note:  row.price_note || '',
     series:      String(row.series).toLowerCase() === 'yes',
     available:   String(row.available).toLowerCase() === 'yes',
-    audio_file:  row.audio_url || '',
-    audio_label: row.audio_label || ''
+    audio_file:   row.audio_url || '',
+    audio_label:  row.audio_label || '',
+    uv_filename:  row.uv_filename || ''
   };
 }
 
@@ -291,6 +327,102 @@ function renderResults(paintings) {
   window._currentResults = paintings;
 }
 
+/* ── Lighting viewer ── */
+function buildLightingSlider(uvFilename) {
+  const strip = document.getElementById('lb-lighting-strip');
+  if (!strip) return;
+  strip.innerHTML = '';
+
+  LIGHT_TYPES.forEach((lt, idx) => {
+    const btn = document.createElement('button');
+    btn.className   = 'light-btn';
+    btn.dataset.idx = idx;
+    btn.title       = lt.label;
+    btn.setAttribute('aria-label', lt.label);
+    btn.innerHTML   = `<img src="${lt.icon}" alt="${lt.label}" width="32" height="32">`;
+    btn.addEventListener('click', () => applyLighting(idx));
+    strip.appendChild(btn);
+  });
+
+  // UV button — separate, greyed out unless uv_filename populated
+  const uvBtn = document.getElementById('lb-uv-btn');
+  if (uvBtn) {
+    if (uvFilename) {
+      uvBtn.removeAttribute('disabled');
+      uvBtn.classList.remove('disabled');
+      uvBtn.onclick = () => applyUVLight(uvFilename);
+    } else {
+      uvBtn.setAttribute('disabled', true);
+      uvBtn.classList.add('disabled');
+      uvBtn.onclick = null;
+    }
+  }
+
+  // Set default light from current atmosphere mood
+  const mood    = document.body.getAttribute('data-mood') || 'daylight';
+  const defId   = MOOD_LIGHT_DEFAULTS[mood] || 'daylight';
+  const defIdx  = LIGHT_TYPES.findIndex(l => l.id === defId);
+  applyLighting(defIdx >= 0 ? defIdx : 0);
+}
+
+function applyLighting(idx) {
+  clearInterval(flickerInterval);
+  currentLightIdx = idx;
+  const lt  = LIGHT_TYPES[idx];
+  const img = document.getElementById('lb-img');
+  if (!img) return;
+
+  // Mark active button
+  document.querySelectorAll('.light-btn').forEach((btn, i) => {
+    btn.classList.toggle('active', i === idx);
+  });
+
+  // Remove UV overlay if present
+  document.getElementById('lb-uv-overlay')?.remove();
+  document.getElementById('lb-uv-btn')?.classList.remove('uv-active');
+
+  if (lt.flicker) {
+    applyFlicker(img, lt);
+  } else {
+    img.style.filter = lt.filter;
+  }
+}
+
+function applyFlicker(img, lt) {
+  const base   = lt.filter;
+  const heavy  = lt.heavy || false;
+  flickerInterval = setInterval(() => {
+    const delta = (Math.random() - 0.5) * (heavy ? 0.18 : 0.08);
+    const warm  = (Math.random() - 0.5) * (heavy ? 6 : 3);
+    // Rebuild filter with slight random brightness and hue variation
+    img.style.filter = base
+      .replace(/brightness\(([\d.]+)\)/, (_, v) => `brightness(${(+v + delta).toFixed(3)})`)
+      .replace(/hue-rotate\(([-\d.]+)deg\)/, (_, v) => `hue-rotate(${(+v + warm).toFixed(1)}deg)`);
+  }, heavy ? 80 : 120);
+}
+
+function applyUVLight(uvFilename) {
+  clearInterval(flickerInterval);
+  const img = document.getElementById('lb-img');
+  if (!img) return;
+
+  // Deactivate light strip selection
+  document.querySelectorAll('.light-btn').forEach(btn => btn.classList.remove('active'));
+
+  // Show UV image instead of regular image
+  img.src = ARTWORK_BASE + encodeURIComponent(uvFilename);
+  img.style.filter = 'none';
+
+  document.getElementById('lb-uv-btn')?.classList.add('uv-active');
+}
+
+function resetLightingOnClose(originalSrc) {
+  clearInterval(flickerInterval);
+  const img = document.getElementById('lb-img');
+  if (img) { img.src = originalSrc; img.style.filter = 'none'; }
+  document.getElementById('lb-uv-btn')?.classList.remove('uv-active');
+}
+
 /* ── Lightbox ── */
 function bindLightbox() {
   const lb        = document.getElementById('lightbox');
@@ -315,6 +447,7 @@ function bindLightbox() {
     lb.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
     stopAudio();
+    resetLightingOnClose('');
   }
 
   function showLightboxItem(idx) {
@@ -342,6 +475,15 @@ function bindLightbox() {
 
     const uvEl = document.getElementById('lb-uv');
     uvEl.style.display = p.uv_active ? 'inline-block' : 'none';
+
+    // Lighting slider
+    buildLightingSlider(p.uv_filename || '');
+
+    // Update enquiry link with painting title
+    const enquireBtn = document.getElementById('lb-enquire');
+    if (enquireBtn) {
+      enquireBtn.href = `mailto:hello@artwork.fi?subject=Kysely: ${encodeURIComponent(p.title)}`;
+    }
 
     // Audio
     const audioSection = document.getElementById('lb-audio-section');
