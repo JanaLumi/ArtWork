@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 /* ── Load themes.csv ── */
 function loadThemes() {
-  Papa.parse('themes.csv', {
+  Papa.parse('data/themes.csv', {
     download:       true,
     header:         true,
     skipEmptyLines: true,
