@@ -9,7 +9,7 @@
 </head>
 <body>
 
-  <!-- ── Navigation ──  -->
+  <!-- ── Navigation ── -->
   <nav aria-label="Päänavigaatio">
     <div class="container nav-inner">
       <span class="nav-logo">Art@Work</span>
@@ -21,19 +21,6 @@
       </ul>
 
       <div class="nav-controls">
-
-        <!-- City typeahead (shown when weather active) -->
-        <div id="city-input-section" style="display:none;" class="city-section">
-          <div class="city-wrap">
-            <input type="text" id="city-input" placeholder="Kaupunki..." autocomplete="off" aria-label="Kirjoita kaupunki">
-            <div id="city-dropdown" class="city-dropdown" role="listbox" aria-label="Kaupunkiehdotukset"></div>
-          </div>
-        </div>
-
-        <!-- Atmosphere label -->
-        <span class="atmosphere-label mono" id="atmosphere-label"></span>
-
-        
         <!-- Atmosphere toggle -->
         <div class="atmosphere-control" title="Vaihda tilaan/säähän">
           <span class="atm-icon" aria-hidden="true">🌌</span>
@@ -45,6 +32,17 @@
           </label>
           <span class="atm-icon" aria-hidden="true">⛅</span>
         </div>
+
+        <!-- City typeahead (shown when weather active) -->
+        <div id="city-input-section" style="display:none;" class="city-section">
+          <div class="city-wrap">
+            <input type="text" id="city-input" placeholder="Kaupunki..." autocomplete="off" aria-label="Kirjoita kaupunki">
+            <div id="city-dropdown" class="city-dropdown" role="listbox" aria-label="Kaupunkiehdotukset"></div>
+          </div>
+        </div>
+
+        <!-- Atmosphere label -->
+        <span class="atmosphere-label mono" id="atmosphere-label"></span>
 
         <!-- Language switcher -->
         <div class="lang-switcher mono">
@@ -414,6 +412,15 @@
 
           <a class="btn btn-umber" style="margin-top:1.5rem;display:inline-block;"
             id="lb-enquire" href="mailto:hello@artwork.fi">Kysy teoksesta</a>
+
+          <!-- Lighting viewer -->
+          <div class="lb-lighting">
+            <div class="lb-lighting-strip" id="lb-lighting-strip"></div>
+            <button class="lb-uv-btn" id="lb-uv-btn" disabled aria-label="UV-valo" title="UV-valo">
+              <span class="uv-icon">🟣</span>
+              <span class="mono">UV</span>
+            </button>
+          </div>
         </div>
       </div>
     </div>
