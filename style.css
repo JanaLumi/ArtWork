@@ -229,10 +229,7 @@ nav {
 }
 
 /* ── Search zone ── */
-#search {
-  background: var(--ink);
-  color: var(--paper);
-}
+
 
 #search h2,
 #search .eyebrow,
@@ -648,8 +645,8 @@ footer {
    Additions — atmosphere, toggle, lightbox, city typeahead
    ============================================================ */
 
-/* ── Theme — artwork-programme is always forest green regardless of mood ── */
-#artwork-programme { background: var(--forest) !important; }
+
+
 
 /* ── Nav controls ── */
 .nav-controls {
@@ -1026,3 +1023,136 @@ footer {
   flex-wrap: wrap;
   margin-top: 0.4rem;
 }
+
+/* ============================================================
+   Sky / Ground zone split
+   Sky (hero + nav): changes fully with atmosphere mood
+   Ground (search, form, programme, about): defined surfaces
+   Images, colour pickers, search results: never touched
+   ============================================================ */
+
+/* Sky zone */
+#hero {
+  background: var(--theme-bg);
+  color: var(--theme-text);
+  transition: background 1.4s ease, color 0.8s ease;
+  overflow: hidden;
+}
+
+#hero h1,
+#hero p,
+#hero .eyebrow {
+  color: var(--theme-text);
+  transition: color 0.8s ease;
+}
+
+/* Ground zone — search */
+#search {
+  background: #0E0E14;
+  color: #E8E4DC;
+}
+
+#search h2,
+#search .eyebrow,
+#search label,
+#search p {
+  color: #E8E4DC;
+}
+
+#search .eyebrow { color: #7A7468; }
+
+/* Ground zone — about */
+#about {
+  background: #141412;
+  color: #E8E4DC;
+}
+
+/* Ground zone — programme always forest */
+#artwork-programme {
+  background: var(--forest) !important;
+  color: #F2EDE4;
+}
+
+/* ── Lighting viewer ── */
+.lb-lighting {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  flex-wrap: wrap;
+}
+
+.lb-lighting-strip {
+  display: flex;
+  gap: 0.3rem;
+  flex-wrap: wrap;
+}
+
+.light-btn {
+  background: none;
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  padding: 0.3rem;
+  cursor: pointer;
+  opacity: 0.5;
+  transition: opacity 0.15s, border-color 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.light-btn img {
+  width: 28px;
+  height: 28px;
+  display: block;
+  /* Allow CSS colour theming on SVG icons */
+  filter: invert(0.8);
+}
+
+.light-btn:hover {
+  opacity: 0.8;
+  border-color: rgba(255,255,255,0.2);
+}
+
+.light-btn.active {
+  opacity: 1;
+  border-color: var(--umber);
+}
+
+/* UV button */
+.lb-uv-btn {
+  background: rgba(100, 0, 160, 0.2);
+  border: 1px solid rgba(150, 60, 200, 0.4);
+  border-radius: var(--radius);
+  color: #C090F0;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  padding: 0.35rem 0.6rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  transition: background 0.15s, border-color 0.15s, opacity 0.15s;
+}
+
+.lb-uv-btn:hover:not(:disabled) {
+  background: rgba(120, 0, 200, 0.35);
+  border-color: rgba(180, 80, 240, 0.6);
+}
+
+.lb-uv-btn.uv-active {
+  background: rgba(140, 0, 220, 0.4);
+  border-color: rgba(200, 100, 255, 0.7);
+  box-shadow: 0 0 10px rgba(160, 60, 255, 0.4);
+}
+
+.lb-uv-btn:disabled,
+.lb-uv-btn.disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.uv-icon { font-size: 0.8rem; }
