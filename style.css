@@ -954,7 +954,7 @@ footer {
 .lb-desc {
   font-size: 0.9rem;
   line-height: 1.7;
-  color: var(--paper);
+  color: var(--ink);
   margin-top: 0.5rem;
 }
 
