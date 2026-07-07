@@ -279,7 +279,7 @@ textarea {
   font-size: 0.85rem;
   background: rgba(255,255,255,0.06);
   border: 1px solid rgba(255,255,255,0.15);
-  color: var(--paper);
+  color: rgba(220,215,205,0.75);
   padding: 0.6rem 0.8rem;
   border-radius: var(--radius);
   width: 100%;
@@ -973,41 +973,26 @@ footer {
 .lb-close:hover { color: var(--paper); }
 
 .lb-nav {
-  position: fixed;
+  position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  z-index: 600;
-  background: rgba(10,10,10,0.55);
-  border: 1px solid rgba(255,255,255,0.15);
+  z-index: 10;
+  background: rgba(0,0,0,0.4);
+  border: 1px solid rgba(255,255,255,0.1);
   color: var(--paper);
-  font-size: 1.4rem;
-  width: 48px;
-  height: 120px;
+  font-size: 1.5rem;
+  width: 2.5rem;
+  height: 2.5rem;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  border-radius: 24px;
-  backdrop-filter: blur(6px);
-  transition: background 0.2s, border-color 0.2s, color 0.2s;
+  border-radius: 50%;
+  transition: background 0.15s;
 }
-.lb-nav:hover {
-  background: rgba(30,30,30,0.8);
-  border-color: rgba(255,255,255,0.35);
-  color: #fff;
-}
-.lb-prev {
-  left: 0.75rem;
-}
-.lb-prev:hover .lb-arrow { transform: translateX(-3px); }
-.lb-next {
-  right: 0.75rem;
-}
-.lb-next:hover .lb-arrow { transform: translateX(3px); }
-.lb-arrow {
-  display: inline-block;
-  transition: transform 0.2s;
-}
+.lb-nav:hover { background: rgba(0,0,0,0.7); }
+.lb-prev { left: 0.75rem; }
+.lb-next { right: 0.75rem; }
 
 /* ── Ireland stat (already in base, just colour fixes) ── */
 .ireland-stat { border-color: rgba(255,255,255,0.2); }
@@ -1118,17 +1103,20 @@ footer {
   justify-content: center;
 }
 
+.light-btn {
+  opacity: 0.45;
+}
+
 .light-btn img {
   width: 28px;
   height: 28px;
   display: block;
-  /* Allow CSS colour theming on SVG icons */
-  filter: invert(0.8);
+  filter: invert(1);
 }
 
 .light-btn:hover {
-  opacity: 0.8;
-  border-color: rgba(255,255,255,0.2);
+  opacity: 0.75;
+  border-color: rgba(255,255,255,0.25);
 }
 
 .light-btn.active {
