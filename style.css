@@ -302,6 +302,7 @@ input[type="number"]:focus,
 select:focus,
 textarea:focus {
   border-color: var(--umber);
+  color: var(--theme-text);
 }
 
 select option { background: var(--ink); }
