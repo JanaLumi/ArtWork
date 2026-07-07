@@ -50,7 +50,7 @@ let searchColours = []; // array of hex strings, max 3
 
 /* ── Boot ── */
 document.addEventListener('DOMContentLoaded', () => {
-  Papa.parse('artworks.csv', {
+  Papa.parse('data/artworks.csv', {
     download:      true,
     header:        true,
     skipEmptyLines: true,
