@@ -279,7 +279,7 @@ textarea {
   font-size: 0.85rem;
   background: rgba(255,255,255,0.06);
   border: 1px solid rgba(255,255,255,0.15);
-  color: rgba(220,215,205,0.75);
+  color: var(--paper);
   padding: 0.6rem 0.8rem;
   border-radius: var(--radius);
   width: 100%;
@@ -786,7 +786,11 @@ footer {
   transition: background 0.1s;
 }
 
-.city-option:hover { background: rgba(255,255,255,0.06); }
+.city-option:hover,
+.city-option:focus {
+  background: rgba(255,255,255,0.09);
+  outline: none;
+}
 
 .city-name {
   font-family: var(--font-mono);
@@ -1103,20 +1107,17 @@ footer {
   justify-content: center;
 }
 
-.light-btn {
-  opacity: 0.45;
-}
-
 .light-btn img {
   width: 28px;
   height: 28px;
   display: block;
-  filter: invert(1);
+  /* Allow CSS colour theming on SVG icons */
+  filter: invert(0.8);
 }
 
 .light-btn:hover {
-  opacity: 0.75;
-  border-color: rgba(255,255,255,0.25);
+  opacity: 0.8;
+  border-color: rgba(255,255,255,0.2);
 }
 
 .light-btn.active {
