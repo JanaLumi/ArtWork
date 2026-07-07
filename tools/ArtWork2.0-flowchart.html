@@ -491,7 +491,7 @@ async function switchPerspective(key, evt) {
     const response = await fetch(view.file);
     const wholeFileText = await response.text();
 
-    // 2. Split the file using our narrative comment divider
+    // 2. Split the file cleanly using the narrative comment divider
     const parts = wholeFileText.split("");
     
     // 3. Part 1 is the Mermaid flowchart graph script layout
@@ -509,8 +509,14 @@ async function switchPerspective(key, evt) {
     outputTarget.removeAttribute("data-processed");
     outputTarget.textContent = code;
 
-    // 6. Trigger local Mermaid layout rebuild
-    mermaid.run({ nodes: [outputTarget] });
+    // 6. Trigger local Mermaid layout rebuild with an error-catching fallback
+    mermaid.run({ 
+      nodes: [outputTarget],
+      suppressErrors: true 
+    }).catch(err => {
+      console.warn("Mermaid caught a structural layout syntax error:", err);
+      outputTarget.textContent = "⚠️ Diagram Syntax Error: Check your .md file arrows or bracket configurations.";
+    });
 
     // Manage active button visual highlights safely
     document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
@@ -530,7 +536,6 @@ async function switchPerspective(key, evt) {
     console.error("Could not fetch the decoupled diagram file:", error);
     document.getElementById("mermaid-target").textContent = "Error reading perspective database file.";
   }
-
 }
 // COMPUTE INITIAL OR MID-SENTENCE UTTERANCE
 function playSpeechFromOffset(textToSpeak, characterOffset = 0) {
