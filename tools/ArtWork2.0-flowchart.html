@@ -474,51 +474,49 @@ async function switchPerspective(key, evt) {
   const view = perspectives[key];
   if (!view) return;
 
-  // Track state change to keep audio engine perfectly aligned
   currentPerspective = key;
 
-  // Halt any active text-to-speech stream when views pivot
   if (synth && synth.speaking) {
     stopAudio();
   }
 
-  // Update accompanying text details via your preferred identifiers
-  document.getElementById("perspective-title").innerText = view.title;
-  document.getElementById("perspective-text").innerHTML = view.text;
-
   try {
-    // 1. Fetch the standalone plain .md text file
     const response = await fetch(view.file);
     const wholeFileText = await response.text();
 
-    // 2. Split the file cleanly using the narrative comment divider
-    const parts = wholeFileText.split("");
-    
-    // 3. Part 1 is the Mermaid flowchart graph script layout
-    let code = parts[0].trim();
+    // 1. Locate and extract the title
+    const titleStart = wholeFileText.indexOf('title: "') + 8;
+    const titleEnd = wholeFileText.indexOf('",', titleStart);
+    const parsedTitle = wholeFileText.substring(titleStart, titleEnd).trim();
 
-    // 4. Part 2 is the actual system story narrative text strings
-    if (parts[1] && parts[1].trim()) {
-      document.getElementById("perspective-text").innerHTML = parts[1].trim();
-    } else {
-      document.getElementById("perspective-text").innerHTML = view.text;
-    }
+    // 2. Locate and extract the text story
+    const textStart = wholeFileText.indexOf('text: `') + 7;
+    const textEnd = wholeFileText.indexOf('`,', textStart);
+    const parsedText = wholeFileText.substring(textStart, textEnd).trim();
 
-    // 5. Re-inject container code block for Mermaid's layout scanner
+    // 3. Locate and extract the flowchart code
+    const codeStart = wholeFileText.indexOf('code: `') + 7;
+    let codeEnd = wholeFileText.lastIndexOf('`');
+    // If the file ends with a trailing quote/space, protect the selection
+    if (codeEnd <= codeStart) codeEnd = wholeFileText.length;
+    const parsedCode = wholeFileText.substring(codeStart, codeEnd).trim();
+
+    // 4. Update the interface headers and narrative text elements
+    document.getElementById("perspective-title").innerText = parsedTitle;
+    document.getElementById("perspective-text").innerHTML = parsedText;
+
+    // 5. Reset target container and populate pure code string
     const outputTarget = document.getElementById("mermaid-target");
     outputTarget.removeAttribute("data-processed");
-    outputTarget.textContent = code;
+    outputTarget.textContent = parsedCode;
 
-    // 6. Trigger local Mermaid layout rebuild with an error-catching fallback
-    mermaid.run({ 
+    // 6. Run the graphic engine build execution
+    await mermaid.run({ 
       nodes: [outputTarget],
       suppressErrors: true 
-    }).catch(err => {
-      console.warn("Mermaid caught a structural layout syntax error:", err);
-      outputTarget.textContent = "⚠️ Diagram Syntax Error: Check your .md file arrows or bracket configurations.";
     });
 
-    // Manage active button visual highlights safely
+    // Handle tab button active state toggling
     document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
     
     if (evt && evt.currentTarget) {
@@ -533,10 +531,11 @@ async function switchPerspective(key, evt) {
     setTimeout(buildSvgImage, 350);
 
   } catch (error) {
-    console.error("Could not fetch the decoupled diagram file:", error);
-    document.getElementById("mermaid-target").textContent = "Error reading perspective database file.";
+    console.error("Could not parse labeled markdown data payload:", error);
+    document.getElementById("mermaid-target").textContent = "Error reading perspective file properties.";
   }
 }
+
 // COMPUTE INITIAL OR MID-SENTENCE UTTERANCE
 function playSpeechFromOffset(textToSpeak, characterOffset = 0) {
   if (synth) {
