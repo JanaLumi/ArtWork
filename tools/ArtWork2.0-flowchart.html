@@ -584,8 +584,11 @@ function toggleNarrativeAudio() {
     return;
   }
   
+  // Scrape whatever live text is inside the container element right now
+  const textContainer = document.getElementById("perspective-text");
   const div = document.createElement('div');
-  div.innerHTML = perspectives[currentPerspective].text;
+  div.innerHTML = textContainer.innerHTML;
+  
   currentTextString = div.innerText;
   currentWordCharacterIndex = 0;
   isAdjustingLive = false;
