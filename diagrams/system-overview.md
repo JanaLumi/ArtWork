@@ -35,3 +35,5 @@ flowchart TD
         E1 --->|"Speculation\nOver-Extraction"| E2["Asymmetry Lockout:\nHalt Processing"]
         E1 --->|"Verified Balance\nCompliance"| E3["Render Filtered Viewport\nGrid Matrix"]
     end
+
+This layout outlines the five functional spheres comprising the complete console ecosystem. It visualizes how separate input panels evaluate physical material truth against automated digital metrics independently within their own unique zones.
