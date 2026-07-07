@@ -480,60 +480,58 @@ async function switchPerspective(key, evt) {
     stopAudio();
   }
 
+  // 1. Immediately render local default properties so first-time users see text right away
+  document.getElementById("perspective-title").innerText = view.title;
+  document.getElementById("perspective-text").innerHTML = view.text;
+
   try {
     const response = await fetch(view.file);
+    if (!response.ok) throw new Error("File not found");
+    
     const wholeFileText = await response.text();
 
-    // 1. Locate and extract the title
+    // 2. Locate and extract the properties dynamically from the file
     const titleStart = wholeFileText.indexOf('title: "') + 8;
     const titleEnd = wholeFileText.indexOf('",', titleStart);
     const parsedTitle = wholeFileText.substring(titleStart, titleEnd).trim();
 
-    // 2. Locate and extract the text story
     const textStart = wholeFileText.indexOf('text: `') + 7;
     const textEnd = wholeFileText.indexOf('`,', textStart);
     const parsedText = wholeFileText.substring(textStart, textEnd).trim();
 
-    // 3. Locate and extract the flowchart code
     const codeStart = wholeFileText.indexOf('code: `') + 7;
     let codeEnd = wholeFileText.lastIndexOf('`');
-    // If the file ends with a trailing quote/space, protect the selection
     if (codeEnd <= codeStart) codeEnd = wholeFileText.length;
     const parsedCode = wholeFileText.substring(codeStart, codeEnd).trim();
 
-    // 4. Update the interface headers and narrative text elements
+    // 3. Override with parsed properties if the file is valid
     document.getElementById("perspective-title").innerText = parsedTitle;
     document.getElementById("perspective-text").innerHTML = parsedText;
 
-    // 5. Reset target container and populate pure code string
     const outputTarget = document.getElementById("mermaid-target");
     outputTarget.removeAttribute("data-processed");
     outputTarget.textContent = parsedCode;
 
-    // 6. Run the graphic engine build execution
-    await mermaid.run({ 
-      nodes: [outputTarget],
-      suppressErrors: true 
-    });
-
-    // Handle tab button active state toggling
-    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-    
-    if (evt && evt.currentTarget) {
-      evt.currentTarget.classList.add('active');
-    } else {
-      const targetText = key === 'journey' ? 'SYSTEM JOURNEY' : 'SYSTEM OVERVIEW';
-      document.querySelectorAll('.tab-btn').forEach(btn => {
-        if (btn.textContent.trim() === targetText) btn.classList.add('active');
-      });
-    }
-
-    setTimeout(buildSvgImage, 350);
+    await mermaid.run({ nodes: [outputTarget], suppressErrors: true });
 
   } catch (error) {
-    console.error("Could not parse labeled markdown data payload:", error);
-    document.getElementById("mermaid-target").textContent = "Error reading perspective file properties.";
+    console.warn("Using local defaults. Could not parse external markdown file:", error.message);
+    // Leave the default text in place, but show a friendly warning where the diagram goes
+    document.getElementById("mermaid-target").textContent = "First-time setup: Add your markdown files to diagrams/ to render the flowchart infrastructure.";
   }
+
+  // Manage tab button states
+  document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+  if (evt && evt.currentTarget) {
+    evt.currentTarget.classList.add('active');
+  } else {
+    const targetText = key === 'journey' ? 'SYSTEM JOURNEY' : 'SYSTEM OVERVIEW';
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      if (btn.textContent.trim() === targetText) btn.classList.add('active');
+    });
+  }
+
+  setTimeout(buildSvgImage, 350);
 }
 
 // COMPUTE INITIAL OR MID-SENTENCE UTTERANCE
