@@ -802,13 +802,13 @@ footer {
 .city-name {
   font-family: var(--font-mono);
   font-size: 0.8rem;
-  color: var(--paper);
+  color: var(--theme-text);
 }
 
 .city-country {
   font-family: var(--font-mono);
   font-size: 0.68rem;
-  color: var(--mid);
+  color: var(--theme-mid);
 }
 
 /* ── Multi-colour picker rows ── */
