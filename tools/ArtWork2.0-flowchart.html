@@ -286,30 +286,31 @@
   </div>
 </div>
 
-<div class="workspace">
-  <div>
-    <div class="legend">
-      <div class="legend-item"><div class="legend-dot" style="background:#EF9F27"></div>⏩ Triggers</div>
-      <div class="legend-item"><div class="legend-dot" style="background:#1D9E75"></div>🔁 Automated processes</div>
-      <div class="legend-item"><div class="legend-dot" style="background:#7F77DD"></div>🎛️ Decisions</div>
-      <div class="legend-item"><div class="legend-dot" style="background:#D85A30"></div>🎚️ Your manual steps</div>
-      <div class="legend-item"><div class="legend-dot" style="background:#888780"></div>⏯️ Start / end</div>
-    </div>
+<div class="workspace-container">
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:#EF9F27"></div>⏩ Triggers</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#1D9E75"></div>🔁 Automated processes</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#7F77DD"></div>🎛️ Decisions</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#D85A30"></div>🎚️ Your manual steps</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#888780"></div>⏯️ Start / end</div>
+  </div>
 
-    <div id="diagram-wrap">
-      <div id="diagram-inner">
-        <div id="mermaid-target" class="mermaid">
-          </div>
-      </div>
+  <div class="workspace">
+    <div>
+      <div id="diagram-wrap">
+        <div id="diagram-inner">
+          <div id="mermaid-target" class="mermaid">
+            </div>
+        </div>
 
-      <div id="lens">
-        <canvas id="lens-canvas" width="220" height="220"></canvas>
-        <div id="lens-rim"></div>
+        <div id="lens">
+          <canvas id="lens-canvas" width="220" height="220"></canvas>
+          <div id="lens-rim"></div>
+        </div>
+        <div id="zoom-badge">2×</div>
       </div>
-      <div id="zoom-badge">2×</div>
+      <p id="hint">Hover to magnify &nbsp;·&nbsp; scroll wheel to adjust zoom &nbsp;·&nbsp; hold mouse click to scroll page</p>
     </div>
-    <p id="hint">Hover to magnify &nbsp;·&nbsp; scroll wheel to adjust zoom &nbsp;·&nbsp; hold mouse click to scroll page</p>
-  
 
     <div class="narrative-card">
       <h2 id="narrative-title">Loading Perspective...</h2>
