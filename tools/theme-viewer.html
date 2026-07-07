@@ -37,8 +37,15 @@
       grid-template-columns: 140px repeat(8, 1fr) 100px;
       gap: 4px;
       margin-bottom: 4px;
-      padding: 0 0 0.5rem;
+/*      padding: 0 0 0.5rem; */
+      padding: 0.5rem 0.4rem; /* Adjusted padding slightly to give breathing room when stuck */
       border-bottom: 1px solid #2A2A3A;
+      
+      /* Sticky Implementation */
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background-color: #0F0F14; /* Match this exactly to your site's dark background */
     }
 
     .header-cell {
