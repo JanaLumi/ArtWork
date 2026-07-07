@@ -384,14 +384,17 @@ const perspectives = {
       end
       subgraph Block_4 [4. The Interface Display]
           G --> H[Fetch manifest array into client application state]
-          I[User adjusts tactile Financial Speculation dial] --> H
+          I1[User adjusts Financial Speculation dial] --> H
+          I2[User calibrates Planet-Centred slider] --> H
+          I3[User balances Ethical equity slider] --> H
+          I4[Dials register Aesthetic Entropy & Colour Waves] --> H
       end
       subgraph Block_5 [5. The Balance Check]
-          H --> J{Evaluate Material Key vs Speculation Index}
-          J -->|Speculation > Sustainability Limits| K[State: ASYMMETRY LOCKOUT <br> Halt Viewport Grid Render]
-          J -->|Balance Constraints Passed| L[Illuminate Verified Variant on Grid]
+          H --> J{Evaluate Multi-Axis Equilibrium}
+          J -->|Speculation > Planet + Ethical + Colour Constraints| K[State: ASYMMETRY LOCKOUT <br> Halt Viewport Grid Render]
+          J -->|All Balanced Constraints Passed| L[Illuminate Verified Variant on Grid]
       end
-      class A,C,I trigger; class B,D,D1,D2,D3,H,J,L system; class F,G database; class K gate;`
+      class A,C,I1,I2,I3,I4 trigger; class B,D,D1,D2,D3,H,J,L system; class F,G database; class K gate;`
   },
   overview: {
     title: "System Overview — Structural Architecture",
@@ -412,23 +415,30 @@ const perspectives = {
       end
 
       subgraph P3 [3. The Data Merger]
-          A2 & A3 ---> C1[Python Compiler Script]
+          A2 & A3 ---> C1[Manifest Compiler Script]
           B3 & B4 ---> C1
           C1 ---> C2[(\`/data/manifest.json\` Archive Database)]
       end
 
       subgraph P4 [4. The Interface Display]
           C2 ---> D1[Client Application Memory State]
-          D2[Tactile Sliders & Dials Panel] ---> D1
+          subgraph D2 [Tactile Control Enclosure]
+              D2a(Financial Speculation Dial)
+              D2b(Planet-Centred Slider)
+              D2c(Ethical Equity Slider)
+              D2d(Aesthetic Entropy Display)
+              D2e(Colour Temperature Wave Meters)
+          end
+          D2a & D2b & D2c & D2d & D2e ---> D1
       end
 
       subgraph P5 [5. The Balance Check]
           D1 ---> E1{Equilibrium Interlock Loop}
-          E1 --->|Speculation > Sustainability Limits| E2[Asymmetry Lockout: Halt Processing]
+          E1 --->|Speculation Over-Extraction| E2[Asymmetry Lockout: Halt Processing]
           E1 --->|Verified Balance Compliance| E3[Render Filtered Viewport Grid Matrix]
       end`
   }
-};  
+};
 
 // GLOBAL STATES
 let currentPerspective = 'journey';
