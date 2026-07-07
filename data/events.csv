@@ -1,0 +1,32 @@
+name,type,month_start,day_start,month_end,day_end,year,animation,label_fi,label_en
+Quadrantids,meteor_shower,1,1,1,5,,meteor,Quadrantidien tähdensadetta,Quadrantid meteor shower
+Lyrids,meteor_shower,4,16,4,25,,meteor,Lyridien tähdensadetta,Lyrid meteor shower
+Eta Aquariids,meteor_shower,4,19,5,28,,meteor,Eta Aquariidien tähdensadetta,Eta Aquariid meteor shower
+Delta Aquariids,meteor_shower,7,12,8,23,,meteor,Delta Aquariidien tähdensadetta,Delta Aquariid meteor shower
+Perseids,meteor_shower,8,11,8,13,,meteor,Perseidien tähdensadetta,Perseid meteor shower
+Draconids,meteor_shower,10,6,10,7,,meteor,Draconidien tähdensadetta,Draconid meteor shower
+Orionids,meteor_shower,10,2,10,22,,meteor,Orionidien tähdensadetta,Orionid meteor shower
+Southern Taurids,meteor_shower,11,4,11,6,,meteor,Eteläisten Tauridien tähdensadetta,Southern Taurid meteor shower
+Leonids,meteor_shower,11,16,11,18,,meteor,Leonidien tähdensadetta,Leonid meteor shower
+Geminids,meteor_shower,12,13,12,15,,meteor,Geminidien tähdensadetta,Geminid meteor shower
+Ursids,meteor_shower,12,21,12,23,,meteor,Ursidien tähdensadetta,Ursid meteor shower
+Total lunar eclipse,eclipse,3,3,3,3,2026,blood_moon,Täydellinen kuunpimennys,Total lunar eclipse
+Total solar eclipse,eclipse,8,12,8,12,2026,solar_eclipse,Täydellinen auringonpimennys,Total solar eclipse
+Partial lunar eclipse,eclipse,8,28,8,28,2026,blood_moon,Osittainen kuunpimennys,Partial lunar eclipse
+Comet C/2025 R3 PanSTARRS,comet,4,15,5,10,2026,comet,Komeetta C/2025 R3,Comet C/2025 R3 PanSTARRS
+Jupiter at opposition,planet,1,10,1,10,2026,planet_bright,Jupiter oppositiossa,Jupiter at opposition
+Mercury greatest elongation,planet,4,3,4,3,2026,planet_bright,Merkurius suurimmassa elongaatiossa,Mercury at greatest elongation
+Saturn meets Mercury,planet,4,20,4,20,2026,planet_bright,Saturnus ja Merkurius kohtaavat,Saturn meets Mercury
+Venus dominates dusk,planet,1,7,10,23,2026,planet_bright,Venus iltataivaalla,Venus in evening sky
+Planetary alignment Mercury Venus Jupiter Moon,conjunction,6,16,6,16,2026,conjunction,Planeettojen konjunktio,Mercury · Venus · Jupiter · Moon alignment
+November planetary groupings,conjunction,11,1,11,30,2026,conjunction,Planeettojen kohtaaminen,Mars · Jupiter · Regulus groupings
+Total lunar eclipse,eclipse,12,31,12,31,2028,blood_moon,Täydellinen kuunpimennys,Total lunar eclipse
+Total solar eclipse,eclipse,8,2,8,2,2027,solar_eclipse,Täydellinen auringonpimennys,Total solar eclipse
+Perseids,meteor_shower,8,11,8,13,2027,meteor,Perseidien tähdensadetta,Perseid meteor shower
+Geminids,meteor_shower,12,13,12,15,2027,meteor,Geminidien tähdensadetta,Geminid meteor shower
+Perseids,meteor_shower,8,11,8,13,2028,meteor,Perseidien tähdensadetta,Perseid meteor shower
+Geminids,meteor_shower,12,13,12,15,2028,meteor,Geminidien tähdensadetta,Geminid meteor shower
+Perseids,meteor_shower,8,11,8,13,2029,meteor,Perseidien tähdensadetta,Perseid meteor shower
+Geminids,meteor_shower,12,13,12,15,2029,meteor,Geminidien tähdensadetta,Geminid meteor shower
+Perseids,meteor_shower,8,11,8,13,2030,meteor,Perseidien tähdensadetta,Perseid meteor shower
+Geminids,meteor_shower,12,13,12,15,2030,meteor,Geminidien tähdensadetta,Geminid meteor shower
