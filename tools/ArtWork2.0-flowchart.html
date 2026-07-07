@@ -150,66 +150,68 @@
     <div class="mermaid">
 %%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#EEEDFE', 'primaryBorderColor': '#534AB7', 'primaryTextColor': '#26215C', 'lineColor': '#888780', 'secondaryColor': '#E1F5EE', 'tertiaryColor': '#FAEEDA', 'fontSize': '13px'}}}%%
 flowchart TD
-    %% Styling and Theme (Retro Space-Age Vibes)
-    classDef hardware fill:#e0e0e0,stroke:#888,stroke-width:2px,color:#222;
-    classDef processing fill:#b3e5fc,stroke:#0288d1,stroke-width:2px,color:#01579b;
-    classDef database fill:#ffe082,stroke:#f57c00,stroke-width:2px,color:#5d4037;
-    classDef dashboard fill:#d1c4e9,stroke:#512da8,stroke-width:2px,color:#311b92;
-    classDef logic fill:#c8e6c9,stroke:#388e3c,stroke-width:2px,color:#1b5e20;
-    classDef safety fill:#ffcdd2,stroke:#d32f2f,stroke-width:2px,color:#b71c1c;
+    %% Styling and Theme (Clean, High-Contrast Blueprint)
+    classDef input fill:#ffffff,stroke:#333,stroke-width:2px,color:#000;
+    classDef process fill:#f0f4c3,stroke:#afb42b,stroke-width:2px,color:#2e7d32;
+    classDef storage fill:#ffe082,stroke:#f57c00,stroke-width:2px,color:#5d4037;
+    classDef ui fill:#e1f5fe,stroke:#0288d1,stroke-width:2px,color:#01579b;
+    classDef lock fill:#ffcdd2,stroke:#c62828,stroke-width:2px,color:#b71c1c;
 
-    %% --- PHASE 1: DATA INGESTION ---
-    subgraph Phase_1 [Phase 1: Local Archive Ingestion]
-        A[Raw Art Asset Folder<br>Local HD / AI Generated] -->|Python Script Scan| B(Local Ollama Engine)
-        B -->|Llama 3.2 Vision Model| C{Automated Extraction}
-        C -->|Calculate Edge Variance| D[Entropy Score]
-        C -->|Extract Dominant Wavelength| E[Color Temperature]
-        C -->|Audit Materials & Studio| F[Ecological & Labor Data]
-    end
-    class A,B hardware; class C,D,E,F processing;
-
-    %% --- PHASE 2: HUMAN-FRIENDLY INTERMEDIARY ---
-    subgraph Phase_2 [Phase 2: Spreadsheet Intermediary]
-        D & E & F -->|Append Rows Automatically| G[Google Sheets / Excel CSV]
-        H[Manual Curatorial Tweak / Text Overrides] -->|Visual Review| G
-        G -->|Run Local Pipe Splitter Script| I[(gallery_data.json <br> Json File)]
-    end
-    class G hardware; class H processing; class I database;
-
-    %% --- PHASE 3: MASTER ENVIRONMENTAL OVERRIDE ---
-    subgraph Phase_3 [Phase 3: The Neumorphic Cockpit UI]
-        I -->|Loaded Client-Side into Browser Memory| J[GitHub Pages App]
+    %% --- PHASE 1: DATA INGESTION & COGNITION ---
+    subgraph Phase_1 [Phase 1: Local Automation & Data Extraction]
+        A[Raw Image Directory <br> Local Hard Drive] -->|Read File Loop| B[Ollama Local Environment]
+        B -->|Llama 3.2 Vision Model| C{Image Assessment Prompt}
         
-        subgraph Controls [Dashboard Control Matrix]
-            K[Spatial Keyboard Overlay<br>ASDF / JKL; Home Row Mapping] -.->|Direct Nav Control| L
-            L[Master Accessibility Override] -->|Slider| M[Telemetry Volume]
-            L -->|Toggle Switch| N[Ambient Drone Audio]
-            O[Aesthetic Calibration Pod] -->|Wavelength Sliders| P[Fuzzy Color Arrays]
-            O -->|Rotary Dial| Q[Compositional Entropy]
-            O -->|Ray Gun Solenoid| R[Binary Trait Gate]
+        C -->|Pixel Edge Analysis| D[Entropy Score <br> Float 0.0 to 1.0]
+        C -->|Color Histogram Scan| E[Color Temp Ratio <br> Cool to Warm]
+        C -->|Object Recognition| F[Semantic Tag Array <br> 'human', 'river', 'abstract']
+    end
+    class A input; class B,C process; class D,E,F storage;
+
+    %% --- PHASE 2: REGENERATIVE & MATERIAL METRICS ---
+    subgraph Phase_2 [Phase 2: Calculating Material & Ecological Debt]
+        G[Manual Audit Data <br> Studio Practices] --> H{Material Composition Analysis}
+        
+        H -->|Identify Base Medium| I[Lifecycle Tag <br> Biodegradable / Synthetic / Upcycled]
+        H -->|Verify Sourcing & Transport| J[Carbon Footprint Offset <br> Estimated KG CO2 / Score]
+        H -->|Verify Gallery Commission| K[Labor Equity Score <br> Fair Profit Split Ratio]
+    end
+    class G input; class H process; class I,J,K storage;
+
+    %% --- PHASE 3: THE STRUCTURAL DATA CONVERSION ---
+    subgraph Phase_3 [Phase 3: The Spreadsheet Intermediary]
+        D & E & F & I & J & K -->|Auto-Populate Columns| L[Master Inventory Spreadsheet <br> .CSV File Format]
+        M[Manual Text Edits <br> Titles / Overrides] -->|Direct Spreadsheet Input| L
+        L -->|Export Command Line / App| N[(gallery_data.json <br> Static JSON File)]
+    end
+    class L storage; class M input; class N storage;
+
+    %% --- PHASE 4: COCKPIT CONTROLS & FILTER CRITERIA ---
+    subgraph Phase_4 [Phase 4: Client-Side Dashboard Interface]
+        N -->|Loaded into Browser Memory| O[GitHub Pages Web Application]
+        
+        subgraph UI_Inputs [User Interface Control Panel]
+            P[Color Wavelength Slider] -->|Filter Rule| P1[Fuzzy Hex Match]
+            Q[Compositional Noise Dial] -->|Filter Rule| Q1[Entropy Value Range]
+            R[Commercial Speculation Dial] -->|Financial Track| R1[Gallery Exclusivity & ROI Target]
+            S[Material Lifecycle Toggle] -->|Ethical Track| S1[Exclude Synthetics / Plastics]
         end
     end
-    class J,L,O dashboard; class K,M,N,P,Q,R hardware;
+    class O,P,Q,R,S ui; class P1,Q1,R1,S1 process;
 
-    %% --- PHASE 4: THE ETHICAL GOVERNOR ---
-    subgraph Phase_4 [Phase 4: System Calibration & Interlocks]
-        S[Market Speculation Dial<br>Gallery Tier / Price Boldness] --> T{The Earth Debt Governor}
-        U[Material Lifecycle Selector<br>Upcycled / Biodegradable Only] --> T
+    %% --- PHASE 5: SYSTEM INTERLOCK & RUNTIME LOGIC ---
+    subgraph Phase_5 [Phase 5: The Validation Interlock & Conditional Output]
+        R1 & S1 --> T{Ecosystem Calibration Safety Loop}
         
-        T -->|Constraint Violated: Missing Balance| V[ERROR: System Asymmetry<br>Low-Freq Audio Buzz / Lockout]
-        T -->|Constraint Satisfied: Closed-Loop Built| W[Calculate Alpha / ROI Cushion]
+        T -->|Speculation Score > Material Sustainability| U[Trigger System Imbalance <br> Interlock Lockout / Alert Mode]
+        T -->|Material Sustainability >= Speculation Score| V[Pass Verified Data Subset]
+        
+        P1 & Q1 & V -->|Execute Native JavaScript Filter Array| W[Recessed Visual Grid Display]
+        W -->|True Match| X[Render Art Piece on Wall]
+        W -->|False Match| Y[Slam Virtual Window Shut / Dim File]
     end
-    class S,U processing; class T safety; class V logic; class W logic;
-
-    %% --- PHASE 5: THE OUTPUT ---
-    subgraph Phase_5 [Phase 5: The Guess Who Visual Output]
-        P & Q & R & W -->|Instant Native JS Filter Loop| X[Recessed Grid Array]
-        X -->|Eliminated Variables| Y[Metallic Windows Slam Shut / Dim]
-        X -->|Successful Path Matches| Z[Perfect Living-Space Art Selection]
-    end
-    class X,Y,Z logic;
-
-
+    class T lock; class U lock; class V,W,X,Y process;
+      
     </div>
   </div>
 
