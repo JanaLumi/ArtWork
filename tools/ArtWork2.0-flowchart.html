@@ -172,7 +172,7 @@ flowchart TD
     subgraph Phase_2 [Phase 2: Spreadsheet Intermediary]
         D & E & F -->|Append Rows Automatically| G[Google Sheets / Excel CSV]
         H[Manual Curatorial Tweak / Text Overrides] -->|Visual Review| G
-        G -->|Run Local Pipe Splitter Script| I[(gallery_data.json <br> 'Jason File')]
+        G -->|Run Local Pipe Splitter Script| I[(gallery_data.json <br> Json File)]
     end
     class G hardware; class H processing; class I database;
 
