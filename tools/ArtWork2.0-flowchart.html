@@ -462,12 +462,20 @@ if (synth && typeof synth.addEventListener === 'function') {
 // Run instantaneous invocation for engines where voices are pre-warmed
 setTimeout(populateVoiceMenu, 200);
 
-// Async runtime renderer function
-async function switchPerspective(key) {
+// Async runtime renderer function with explicit browser event integration
+async function switchPerspective(key, evt) {
   const view = perspectives[key];
   if (!view) return;
 
-  // Update accompanying text details
+  // Track state change to keep audio engine perfectly aligned
+  currentPerspective = key;
+
+  // Halt any active text-to-speech stream when views pivot
+  if (synth && synth.speaking) {
+    stopAudio();
+  }
+
+  // Update accompanying text details via your preferred identifiers
   document.getElementById("perspective-title").innerText = view.title;
   document.getElementById("perspective-text").innerHTML = view.text;
 
@@ -487,16 +495,28 @@ async function switchPerspective(key) {
     // Trigger local Mermaid layout rebuild
     mermaid.run({ nodes: [outputTarget] });
 
-    // Manage your active button visual states
+    // Manage active button visual highlights safely
     document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-    event.currentTarget.classList.add('active');
+    
+    // Fallback block if invocation occurs on load without interaction events
+    if (evt && evt.currentTarget) {
+      evt.currentTarget.classList.add('active');
+    } else {
+      // Automatic fallback selection matching on application initialization states
+      const targetText = key === 'journey' ? 'SYSTEM JOURNEY' : 'SYSTEM OVERVIEW';
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        if (btn.textContent.trim() === targetText) btn.classList.add('active');
+      });
+    }
+
+    // Force magnification lens recalculations to update image caches smoothly
+    setTimeout(buildSvgImage, 350);
 
   } catch (error) {
     console.error("Could not fetch the decoupled diagram file:", error);
     document.getElementById("mermaid-target").textContent = "Error reading perspective database file.";
   }
 }
-
 // COMPUTE INITIAL OR MID-SENTENCE UTTERANCE
 function playSpeechFromOffset(textToSpeak, characterOffset = 0) {
   if (synth) {
