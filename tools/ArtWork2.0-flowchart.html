@@ -242,12 +242,12 @@
     border-bottom: 1px solid #f4f3ed;
     padding-bottom: 0.5rem;
   }
-  .narrative-text {
+  .perspective-text {
     font-size: 0.9rem;
     line-height: 1.6;
     color: #3a3a38;
   }
-  .narrative-text p { margin-bottom: 1rem; }
+  .perspective-text p { margin-bottom: 1rem; }
 
   /* SPYGLOSS LENS */
   #lens {
@@ -334,8 +334,8 @@
 
 <div class="console-controls">
   <div class="tabs">
-    <button class="tab-btn active" onclick="switchPerspective('journey')">SYSTEM JOURNEY</button>
-    <button class="tab-btn" onclick="switchPerspective('overview')">SYSTEM OVERVIEW</button>
+    <button class="tab-btn active" onclick="switchPerspective('journey', event)">SYSTEM JOURNEY</button>
+    <button class="tab-btn" onclick="switchPerspective('overview', event)">SYSTEM OVERVIEW</button>
   </div>
   <div class="audio-panel">
     <select id="voice-menu" class="voice-select" onchange="handleVoiceChange()">
@@ -391,8 +391,8 @@
     </div>
 
     <div class="narrative-card">
-      <h2 id="narrative-title">Loading Perspective...</h2>
-      <div id="narrative-content" class="narrative-text"></div>
+      <h2 id="perspective-title">Loading Perspective...</h2>
+      <div id="perspective-content" class="perspective-text"></div>
     </div>
   </div>
 </div>
@@ -400,87 +400,18 @@
 <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
 <script>
 // PERSPECTIVE ARCHIVE DATA MATRIX
+// Metadata config for descriptions and file pathways
 const perspectives = {
   journey: {
     title: "System Journey — Tracing the Data Flow",
+    file: "diagrams/system-journey.md",
     text: `<p>This perspective tracks how data travels through the console modules, starting simultaneously with human archival records and automated digital scans.</p>
-           <p>First, physical reality is logged in the spreadsheet while a background scan calculates mathematical parameters like Aesthetic Entropy and Colour Temperature Waves. Second, the Data Merger collapses these parallel streams into a single database file. Finally, when loaded into the Interface Display, the system routes the inputs through a Balance Check. If the Financial Speculation dial scales higher than the Planet-Centred or Ethical limits of the piece, the layout enters an Asymmetry Lockout, halting the display until equilibrium is restored.</p>`,
-    code: `flowchart TD
-      %%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#EEEDFE', 'primaryBorderColor': '#534AB7', 'primaryTextColor': '#26215C', 'lineColor': '#888780', 'secondaryColor': '#E1F5EE', 'fontSize': '16px'}}}%%
-      classDef trigger fill:#fff3e0,stroke:#ff9800,stroke-width:2px,color:#e65100;
-      classDef system fill:#e1f5fe,stroke:#0288d1,stroke-width:2px,color:#01579b;
-      classDef database fill:#ffe082,stroke:#f57c00,stroke-width:2px,color:#5d4037;
-      classDef gate fill:#ffcdd2,stroke:#c62828,stroke-width:2px,color:#b71c1c;
-
-      subgraph Block_1 [1. The Physical Log]
-          A[Archivist logs parameters into /archive/matrix.csv] --> B[Capture Sourcing Material Keys & Labour Splits]
-      end
-      subgraph Block_2 [2. The Digital File Scan]
-          C[Image files added to folder] --> D[watch.py triggers local analysis]
-          D --> D1[OpenCV calculates Laplacian Edge Variance <br> Aesthetic Entropy]
-          D --> D2[NumPy computes Wavelength Histograms <br> Colour Temperature Waves]
-          D --> D3[Ollama running Llava Local Vision Model <br> Visual Style Tags]
-      end
-      subgraph Block_3 [3. The Data Merger]
-          B --> F[Python compiler combines CSV + JSON Arrays]
-          D1 & D2 & D3 --> F
-          F --> G[(static /data/manifest.json)]
-      end
-      subgraph Block_4 [4. The Interface Display]
-          G --> H[Fetch manifest array into <br> client application state]
-          I1[User calibrates <br> Planet-Centred slider] --> H
-          I2[User balances <br> Ethical equity slider] --> H
-          I3[User adjusts <br> Financial Speculation dial] --> H
-          I4[Dials register Aesthetic Entropy <br> & Colour Waves] --> H
-      end
-      subgraph Block_5 [5. The Balance Check]
-          H --> J{Evaluate Multi-Axis <br> Equilibrium}
-          J -->|Speculation > Planet + <br> Ethical + Colour Constraints| K[State: ASYMMETRY LOCKOUT <br> Halt Viewport Grid Render]
-          J -->|All Balanced <br> Constraints Passed| L[Illuminate Verified <br> Variant on Grid]
-      end
-      class A,C,I1,I2,I3,I4 trigger; class B,D,D1,D2,D3,H,J,L system; class F,G database; class K gate;`
+           <p>First, physical reality is logged in the spreadsheet while a background scan calculates mathematical parameters like Aesthetic Entropy and Colour Temperature Waves.</p>`
   },
   overview: {
     title: "System Overview — Structural Architecture",
-    text: `<p>This layout outlines the five functional blocks comprising the complete console ecosystem. It visualizes how separate input panels evaluate physical material truth against automated digital metrics before client-side rendering.</p>
-           <p>Block 1 and Block 2 operate as parallel intakes, capturing the Planet-Centred/Ethical data and the mathematical properties (Aesthetic Entropy, Colour Temperature Waves) independently. Block 3 acts as the translation layer where these inputs combine into an indexable data block. Block 4 and Block 5 handle the live interface layout and enforcement loops, checking database variables against your balance rules before mapping visual data to the viewport grid.</p>`,
-    code: `flowchart TD
-      %%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#EEEDFE', 'primaryBorderColor': '#534AB7', 'primaryTextColor': '#26215C', 'lineColor': '#888780', 'secondaryColor': '#E1F5EE', 'fontSize': '16px'}}}%%
-      
-      subgraph P1 [1. The Physical Log]
-          A1[\`/archive/matrix.csv\`] ---> A2[Sourcing Origin Audit]
-          A1 ---> A3[Labour & Split Registry]
-      end
-
-      subgraph P2 [2. The Digital File Scan]
-          B1[\`/archive/masters/\` Directory] ---> B2[watch.py Daemon Process]
-          B2 ---> B3[OpenCV / NumPy Analysis Engine]
-          B2 ---> B4[Ollama Local LLava Daemon]
-      end
-
-      subgraph P3 [3. The Data Merger]
-          A2 & A3 ---> C1[Manifest Compiler Script]
-          B3 & B4 ---> C1
-          C1 ---> C2[(\`/data/manifest.json\` Archive Database)]
-      end
-
-      subgraph P4 [4. The Interface Display]
-          C2 ---> D1[Client Application Memory State]
-          subgraph D2 [Tactile Control Enclosure]
-              D2a(Planet-Centred <br> Slider)
-              D2b(Ethical Equity <br> Slider)
-              D2c(Financial Speculation <br> Dial)
-              D2d(Aesthetic Entropy Display)
-              D2e(Colour Temperature Wave Meters)
-          end
-          D2a & D2b & D2c & D2d & D2e ---> D1
-      end
-
-      subgraph P5 [5. The Balance Check]
-          D1 ---> E1{Equilibrium <br> Interlock Loop}
-          E1 --->|Speculation <br> Over-Extraction| E2[Asymmetry Lockout: Halt Processing]
-          E1 --->|Verified Balance <br> Limits| E3[Render Filtered Viewport Grid Matrix]
-      end`
+    file: "diagrams/system-overview.md",
+    text: `<p>This layout outlines the five functional blocks comprising the complete console ecosystem. It visualizes how separate input panels evaluate physical material truth against automated digital metrics independently.</p>`
   }
 };
 
@@ -529,33 +460,39 @@ if (synth && typeof synth.addEventListener === 'function') {
 // Run instantaneous invocation for engines where voices are pre-warmed
 setTimeout(populateVoiceMenu, 200);
 
-// SWITCH PERSPECTIVES LAYER
-function switchPerspective(key) {
-  currentPerspective = key;
-  stopAudio();
-  
-  document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-  
-  if (window.event && window.event.target && window.event.target.classList) {
-    window.event.target.classList.add('active');
-  } else {
-    const btns = document.querySelectorAll('.tab-btn');
-    if(key === 'journey') btns[0].classList.add('active');
-    if(key === 'overview') btns[1].classList.add('active');
+// Async runtime renderer function
+async function switchPerspective(key) {
+  const view = perspectives[key];
+  if (!view) return;
+
+  // Update accompanying text details
+  document.getElementById("perspective-title").innerText = view.title;
+  document.getElementById("perspective-text").innerHTML = view.text;
+
+  try {
+    // Read the standalone plain .md text file
+    const response = await fetch(view.file);
+    let code = await response.text();
+
+    // Clean out typical markdown code fences if editing left them behind
+    code = code.replace(/```mermaid/g, "").replace(/```/g, "").trim();
+
+    // Re-inject container code block for Mermaid's layout scanner
+    const outputTarget = document.getElementById("mermaid-target");
+    outputTarget.removeAttribute("data-processed");
+    outputTarget.textContent = code;
+
+    // Trigger local Mermaid layout rebuild
+    mermaid.run({ nodes: [outputTarget] });
+
+    // Manage your active button visual states
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    event.currentTarget.classList.add('active');
+
+  } catch (error) {
+    console.error("Could not fetch the decoupled diagram file:", error);
+    document.getElementById("mermaid-target").textContent = "Error reading perspective database file.";
   }
-  
-  document.getElementById('narrative-title').innerText = perspectives[key].title;
-  document.getElementById('narrative-content').innerHTML = perspectives[key].text;
-  
-  const target = document.getElementById('mermaid-target');
-  target.removeAttribute('data-processed');
-  target.innerHTML = perspectives[key].code;
-  
-  svgImg = null;
-  mermaid.parse(perspectives[key].code);
-  mermaid.run({ nodes: [target] });
-  
-  setTimeout(() => buildSvgImage(), 600);
 }
 
 // COMPUTE INITIAL OR MID-SENTENCE UTTERANCE
