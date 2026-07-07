@@ -105,6 +105,48 @@ function initCityTypeahead() {
     }, 300);
   });
 
+  // Keyboard navigation: down arrow enters dropdown, escape closes
+  input.addEventListener('keydown', e => {
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      const first = dropdown.querySelector('.city-option');
+      if (first) { first.setAttribute('tabindex', '0'); first.focus(); }
+    }
+    if (e.key === 'Escape') {
+      dropdown.style.display = 'none';
+      input.focus();
+    }
+  });
+
+  // Arrow key navigation within dropdown
+  dropdown.addEventListener('keydown', e => {
+    const options = [...dropdown.querySelectorAll('.city-option')];
+    const current = document.activeElement;
+    const idx     = options.indexOf(current);
+
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      const next = options[idx + 1];
+      if (next) { next.setAttribute('tabindex', '0'); next.focus(); }
+    }
+    if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      if (idx === 0) { input.focus(); }
+      else {
+        const prev = options[idx - 1];
+        if (prev) { prev.setAttribute('tabindex', '0'); prev.focus(); }
+      }
+    }
+    if (e.key === 'Enter' && current.classList.contains('city-option')) {
+      e.preventDefault();
+      current.click();
+    }
+    if (e.key === 'Escape') {
+      dropdown.style.display = 'none';
+      input.focus();
+    }
+  });
+
   document.addEventListener('click', e => {
     if (!input.contains(e.target) && !dropdown.contains(e.target)) {
       dropdown.style.display = 'none';
@@ -117,6 +159,8 @@ function renderCityDropdown(results, dropdown, input) {
 
   dropdown.innerHTML = results.map(r => `
     <div class="city-option"
+      tabindex="-1"
+      role="option"
       data-lat="${r.latitude}" data-lon="${r.longitude}"
       data-name="${r.name}" data-country="${r.country || ''}">
       <span class="city-name">${r.name}</span>
