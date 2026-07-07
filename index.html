@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="fi" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Art@Work — Taidetta eläviin tiloihin</title>
+  <meta name="description" content="Art@Work yhdistää taiteilijat tiloihin, joissa tarvitaan elävää, nykytaidetta — ja tuo taiteilijat mukaan insinööri- ja tiedeympäristöihin tarinankerrojina.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ── Navigation ── -->
+  <nav aria-label="Päänavigaatio">
+    <div class="container nav-inner">
+      <span class="nav-logo">Art@Work</span>
+
+      <ul class="nav-links">
+        <li><a href="#search">Etsi taidetta</a></li>
+        <li><a href="#artwork-programme">Ohjelma</a></li>
+        <li><a href="#about">Tietoa</a></li>
+      </ul>
+
+      <div class="nav-controls">
+        <!-- Atmosphere toggle -->
+        <div class="atmosphere-control" title="Vaihda tilaan/säähän">
+          <span class="atm-icon" aria-hidden="true">🌌</span>
+          <label class="toggle-switch">
+            <input type="checkbox" id="atmosphere-toggle" role="switch" aria-label="Ota sää käyttöön">
+            <span class="toggle-track">
+              <span class="toggle-thumb"></span>
+            </span>
+          </label>
+          <span class="atm-icon" aria-hidden="true">⛅</span>
+        </div>
+
+        <!-- City typeahead (shown when weather active) -->
+        <div id="city-input-section" style="display:none;" class="city-section">
+          <div class="city-wrap">
+            <input type="text" id="city-input" placeholder="Kaupunki..." autocomplete="off" aria-label="Kirjoita kaupunki">
+            <div id="city-dropdown" class="city-dropdown" role="listbox" aria-label="Kaupunkiehdotukset"></div>
+          </div>
+        </div>
+
+        <!-- Atmosphere label -->
+        <span class="atmosphere-label mono" id="atmosphere-label"></span>
+
+        <!-- Language switcher -->
+        <div class="lang-switcher mono">
+          <button class="lang-btn active" data-lang="fi">FI</button>
+          <button class="lang-btn" data-lang="en">EN</button>
+          <button class="lang-btn" data-lang="sv">SV</button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ── Hero ── -->
+  <section id="hero">
+    <div class="container">
+      <div class="hero-statement">
+        <p class="eyebrow">Art@Work</p>
+        <h1>Taide on työtä.<br>Se kuuluu tiloihin, joissa työtä tehdään.</h1>
+        <p>Art@Work yhdistää tiloja, jotka haluavat elävää ja nykytaidetta, niihin taiteilijoihin jotka tekevät sitä — ja tuo taiteilijat mukaan insinööri- ja tiedeympäristöihin tarinankerrojina, ei koristeena.</p>
+        <div class="zone-links">
+          <a href="#search" class="btn btn-ink">Etsi taidetta tilaasi</a>
+          <a href="#artwork-programme" class="btn btn-forest">Art@Work-ohjelma</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Search zone ── -->
+  <section id="search">
+    <div class="container">
+      <p class="eyebrow">Etsi taidetta tilaasi</p>
+      <h2>Selaa maalauksia</h2>
+      <p>Selaa saatavilla olevia teoksia. Suodata värin, materiaalin tai muodon mukaan. Jos et löydä sopivaa, tee pyyntö alla — otan yhteyttä verkostooni.</p>
+
+      <!-- Palette bar -->
+      <div id="palette-bar" aria-hidden="true"></div>
+
+      <!-- Filters -->
+      <div class="search-grid">
+
+        <!-- Colour filter -->
+        <div class="field-group full">
+          <label class="checkbox-inline">
+            <input type="checkbox" id="filter-colour">
+            Suodata värin mukaan
+          </label>
+
+          <div id="colour-pickers" style="margin-top:0.75rem;display:flex;flex-direction:column;gap:0.6rem;"></div>
+
+          <button class="btn btn-ghost" id="btn-add-colour" style="margin-top:0.5rem;align-self:flex-start;">
+            + Lisää väri <span class="mono" style="font-size:0.65rem;">(max 3)</span>
+          </button>
+        </div>
+
+        <!-- Shape -->
+        <div class="field-group">
+          <label for="filter-shape">Muoto</label>
+          <select id="filter-shape">
+            <option value="any">Kaikki muodot</option>
+            <option value="square">Neliö</option>
+            <option value="rectangle">Suorakaide</option>
+            <option value="shaped">Muotoinen</option>
+          </select>
+        </div>
+
+        <!-- Material -->
+        <div class="field-group">
+          <label for="filter-material">Materiaali</label>
+          <select id="filter-material">
+            <option value="any">Kaikki materiaalit</option>
+            <option value="mdf">MDF</option>
+            <option value="hardboard">Kovalevy</option>
+            <option value="canvas">Kangas</option>
+          </select>
+        </div>
+
+        <!-- Price -->
+        <div class="field-group">
+          <label for="filter-budget-max">Enimmäisbudjetti (€)</label>
+          <input type="number" id="filter-budget-max" min="0" placeholder="esim. 1000">
+        </div>
+
+        <!-- Series -->
+        <div class="field-group">
+          <label for="filter-series">Sarja</label>
+          <select id="filter-series">
+            <option value="any">Kaikki teokset</option>
+            <option value="no">Ei sarjoja</option>
+            <option value="yes">Vain sarjat</option>
+          </select>
+        </div>
+
+        <!-- UV -->
+        <div class="field-group full">
+          <div class="checkbox-group">
+            <label class="checkbox-inline">
+              <input type="checkbox" id="filter-uv">
+              Vain UV-aktiiviset teokset
+            </label>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="search-actions full">
+          <button class="btn btn-ink" id="btn-search">Hae</button>
+          <button class="btn btn-ghost" id="btn-reset">Nollaa</button>
+        </div>
+
+      </div>
+
+      <!-- Results -->
+      <div id="results">
+        <p class="results-count mono" id="results-count"></p>
+        <div class="paintings-grid" id="paintings-grid"></div>
+      </div>
+
+      <!-- Request accordion -->
+      <div id="request-accordion">
+        <button
+          class="accordion-trigger"
+          id="accordion-trigger"
+          aria-expanded="false"
+          aria-controls="accordion-body">
+          <span>Etkö löytänyt sopivaa? Tee pyyntö</span>
+          <span class="chevron" aria-hidden="true">▾</span>
+        </button>
+
+        <div class="accordion-body" id="accordion-body" role="region" aria-labelledby="accordion-trigger">
+
+          <p class="privacy-note" style="margin-bottom:1.5rem;">
+            Pyyntösi lisätään julkiseen tietokantaan, josta taiteilijat voivat selata sitä suoraan.
+            He voivat ottaa sinuun yhteyttä olemassa olevalla teoksella tai tilaustyöehdotuksella.
+            Lähettämällä pyynnön hyväksyt, että yhteystietosi ovat taiteilijaverkoston nähtävissä.
+          </p>
+
+          <form class="request-form" id="request-form" novalidate>
+
+            <div class="field-group">
+              <label for="req-name">Nimesi *</label>
+              <input type="text" id="req-name" name="name" required>
+            </div>
+
+            <div class="field-group">
+              <label for="req-email">Sähköpostiosoite *</label>
+              <input type="text" id="req-email" name="email" required>
+            </div>
+
+            <div class="field-group full">
+              <label for="req-org">Organisaatio tai tila (valinnainen)</label>
+              <input type="text" id="req-org" name="organisation">
+            </div>
+
+            <div class="field-group full">
+              <label for="req-description">Mitä etsit? *</label>
+              <textarea id="req-description" name="description" rows="4" required
+                placeholder="Kuvaile tilaa, tunnelmaa, mitä tahansa hyödyllistä kontekstia."></textarea>
+            </div>
+
+            <div class="field-group full">
+              <label for="req-url">Linkki tilan kuviin (valinnainen)</label>
+              <input type="text" id="req-url" name="space_url"
+                placeholder="Google Drive, Dropbox, verkkosivusto — vain julkinen linkki">
+            </div>
+
+            <!-- Art types -->
+            <div class="field-group full" id="request-shape-group">
+              <label>Teostyyppi (valitse kaikki sopivat)</label>
+              <div class="checkbox-group">
+                <label class="checkbox-inline"><input type="checkbox" name="art_type" value="painting"> Maalaus</label>
+                <label class="checkbox-inline"><input type="checkbox" name="art_type" value="print_poster"> Juliste / vedos</label>
+                <label class="checkbox-inline"><input type="checkbox" name="art_type" value="sculpture"> Veistos</label>
+                <label class="checkbox-inline"><input type="checkbox" name="art_type" value="installation"> Installaatio</label>
+                <label class="checkbox-inline"><input type="checkbox" name="art_type" value="mobile"> Mobile / kineettinen</label>
+                <label class="checkbox-inline"><input type="checkbox" name="art_type" value="textile"> Tekstiili / seinävaate</label>
+                <label class="checkbox-inline"><input type="checkbox" name="art_type" value="other"> Muu</label>
+              </div>
+            </div>
+
+            <!-- Size -->
+            <div class="field-group">
+              <label for="req-width">Leveys noin (cm)</label>
+              <input type="number" id="req-width" name="width_cm" min="1">
+            </div>
+
+            <div class="field-group">
+              <label for="req-height">Korkeus noin (cm)</label>
+              <input type="number" id="req-height" name="height_cm" min="1">
+            </div>
+
+            <!-- Framing + UV -->
+            <div class="field-group">
+              <label for="req-framing">Kehystystoive</label>
+              <select id="req-framing" name="framing">
+                <option value="any">Ei väliä</option>
+                <option value="framed">Kehystetty</option>
+                <option value="unframed">Ilman kehystä</option>
+                <option value="open">Sovitaan taiteilijan kanssa</option>
+              </select>
+            </div>
+
+            <div class="field-group" style="justify-content:flex-end;">
+              <label>&nbsp;</label>
+              <label class="checkbox-inline">
+                <input type="checkbox" id="request-uv" name="uv_active" value="yes">
+                UV-aktiivinen toivottu
+              </label>
+            </div>
+
+            <!-- Space colours (for palette generation), max 9 -->
+            <div class="field-group full">
+              <label>Tilan päävärit — HEX (enintään 9, valinnainen)</label>
+              <p class="privacy-note" style="margin-bottom:0.5rem;">Näistä muodostetaan väriehdotus Instagramiin.</p>
+              <div class="space-colours-grid">
+                <input type="text" id="req-space-colour-1" name="space_colour_1" maxlength="7" placeholder="#rrggbb">
+                <input type="text" id="req-space-colour-2" name="space_colour_2" maxlength="7" placeholder="#rrggbb">
+                <input type="text" id="req-space-colour-3" name="space_colour_3" maxlength="7" placeholder="#rrggbb">
+                <input type="text" id="req-space-colour-4" name="space_colour_4" maxlength="7" placeholder="#rrggbb">
+                <input type="text" id="req-space-colour-5" name="space_colour_5" maxlength="7" placeholder="#rrggbb">
+                <input type="text" id="req-space-colour-6" name="space_colour_6" maxlength="7" placeholder="#rrggbb">
+                <input type="text" id="req-space-colour-7" name="space_colour_7" maxlength="7" placeholder="#rrggbb">
+                <input type="text" id="req-space-colour-8" name="space_colour_8" maxlength="7" placeholder="#rrggbb">
+                <input type="text" id="req-space-colour-9" name="space_colour_9" maxlength="7" placeholder="#rrggbb">
+              </div>
+            </div>
+
+            <!-- Colour wishes (max 6, prefilled from search) -->
+            <div class="field-group full">
+              <label>Väritoiveet teokselle — HEX (enintään 6, valinnainen)</label>
+              <span class="mono" id="request-colour-note" style="font-size:0.68rem;color:var(--mid);display:block;margin-bottom:0.4rem;"></span>
+              <div class="space-colours-grid">
+                <input type="text" id="req-colour-wish-1" name="colour_wish_1" maxlength="7" placeholder="#rrggbb">
+                <input type="text" id="req-colour-wish-2" name="colour_wish_2" maxlength="7" placeholder="#rrggbb">
+                <input type="text" id="req-colour-wish-3" name="colour_wish_3" maxlength="7" placeholder="#rrggbb">
+                <input type="text" id="req-colour-wish-4" name="colour_wish_4" maxlength="7" placeholder="#rrggbb">
+                <input type="text" id="req-colour-wish-5" name="colour_wish_5" maxlength="7" placeholder="#rrggbb">
+                <input type="text" id="req-colour-wish-6" name="colour_wish_6" maxlength="7" placeholder="#rrggbb">
+              </div>
+            </div>
+
+            <!-- Budget -->
+            <div class="field-group">
+              <label for="req-budget-min">Budjetti min (€)</label>
+              <input type="number" id="req-budget-min" name="budget_min" min="0" placeholder="esim. 200">
+            </div>
+
+            <div class="field-group">
+              <label for="req-budget-max">Budjetti max (€)</label>
+              <input type="number" id="req-budget-max" name="budget_max" min="0" placeholder="esim. 800">
+            </div>
+
+            <p class="privacy-note full">
+              Tilaustyöhön tarvitaan budjettihaarukka. Ilman budjettia taiteilija hinnoittelee itse.
+              Kaikki järjestelyt tehdään suoraan sinun ja taiteilijan välillä.
+            </p>
+
+            <div class="full" style="display:flex;gap:1rem;flex-wrap:wrap;">
+              <button type="submit" class="btn btn-umber">Lähetä pyyntö</button>
+            </div>
+
+          </form>
+
+          <div id="request-confirmation" style="display:none;">
+            <p class="mono" style="font-size:0.85rem;line-height:1.8;">
+              Pyyntö vastaanotettu. Se lisätään julkiseen tietokantaan pian.<br>
+              Taiteilijat voivat ottaa sinuun yhteyttä suoraan. Otan myös itse yhteyttä, jos minulla on sopiva ehdokas mielessä.
+            </p>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── Art@Work Programme ── -->
+  <section id="artwork-programme">
+    <div class="container">
+      <p class="eyebrow">Art@Work-ohjelma</p>
+      <h2>Taiteilijat kuuluvat huoneisiin, joissa tulevaisuutta rakennetaan.</h2>
+
+      <div class="programme-grid">
+        <div class="programme-block">
+          <h3>Ongelma</h3>
+          <p>Insinöörit vastaavat kysymyksiin mitä ja miten. Taiteilijat vastaavat kysymykseen miksi sillä on merkitystä ihmisille. Suomessa, jossa insinööreillä on vahva kulttuurinen asema, tämä kuilu näkyy — ja maksaa.</p>
+        </div>
+        <div class="programme-block">
+          <h3>Malli</h3>
+          <p>Art@Work sijoittaa taiteilijoita insinööri- ja tiedeyrityksiin tarinankerrojina ja visuaalisina viestijöinä — samalla asemalla, pääsyllä ja ammatillisella arvostuksella kuin muut osallistujat. Innoituksena NASAn Artist in Residence -ohjelma.</p>
+        </div>
+        <div class="programme-block">
+          <h3>Yrityksille</h3>
+          <p>Elävää, nykypäivän taidetta — tehty ihmisten toimesta sinun kaupungissasi, sinun aikanasi. Ei kuvapankkikuvia, ei tekoälygeneraatiota. Taiteilija, joka ymmärtää työtäsi ja osaa tehdä siitä ymmärrettävää.</p>
+        </div>
+        <div class="programme-block">
+          <h3>Taiteilijoille</h3>
+          <p>Ammatillinen tasa-arvo, ei patronaatti. Palkka konsultin tai asiantuntijan tasolla. Pääsy ympäristöihin, verkostoihin ja materiaaleihin, jotka laajentavat käytäntöäsi.</p>
+        </div>
+      </div>
+
+      <div class="ireland-stat">
+        <div class="figure">€1,39</div>
+        <p>palautuu yhteiskunnalle jokaista taiteilijoihin sijoitettua euroa kohti — Irlannin Basic Income for the Arts -pilotin arviointi, Alma Economics. Ohjelma on sittemmin vakiinnutettu pysyväksi.</p>
+      </div>
+<!--
+      <div class="enquiry-actions">
+        <a href="mailto:hello@artwork.fi?subject=Yrityskysely — Art@Work" class="btn btn-ink">Yrityskysely</a>
+        <a href="mailto:hello@artwork.fi?subject=Taiteilijakysely — Art@Work" class="btn btn-ink">Taiteilijakysely</a>
+      </div> -->
+    </div>
+  </section>
+
+  <!-- ── About ── -->
+  <section id="about">
+    <div class="container">
+      <div class="about-grid">
+        <div>
+          <p class="eyebrow">Tietoa</p>
+          <h2>Jana Lumi</h2>
+          <p style="margin-top:1rem;">Art@Work on Jana Lumin kehittämä ohjelma — suunnittelija, tutkija ja taiteilija Tampereelta. Työ asettuu systeemiajattelun, ihminen-teknologia-vuorovaikutuksen ja sen kysymyksen risteykseen, mikä lasketaan arvokkaaksi työelämässä.</p>
+          <p style="margin-top:1rem;">Tässä arkistossa olevat maalaukset on tehty MDF-levylle, kovalevy-pohjalle ja kierrätetylle futonkankaalle. Osa hehkuu UV-valossa. Kaikki ovat saatavilla tiloihin, jotka haluavat jotain käsintehtyä ja läsnä olevaa.</p>
+          <p style="margin-top:1rem;"><a href="https://janalumi.github.io/artworks" target="_blank" rel="noopener">Portfolio →</a></p>
+        </div>
+        <div>
+          <p class="eyebrow" style="margin-bottom:0.75rem;">Verkko ja yhteydet</p>
+          <p class="mono" style="font-size:0.75rem;line-height:2;color:var(--umber);">
+            Design & Posthumanism Network<br>
+            Elonovi<br>
+            Pispalan Kulttuuriyhdistys<br>
+            Onkiniemi Ateljee<br>
+            Artteli kumppanuusyhdistys
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Footer ── -->
+  <footer>
+    <div class="container footer-inner">
+      <span>Art@Work — Jana Lumi</span>
+      <span>Tampere, Suomi</span>
+      <span>Taide on työtä.</span>
+    </div>
+  </footer>
+
+  <!-- ── Lightbox ── -->
+  <div id="lightbox" class="lightbox" role="dialog" aria-modal="true" aria-label="Teos" aria-hidden="true">
+    <button class="lb-nav lb-prev" id="lb-prev" aria-label="Edellinen"><span class="lb-arrow">‹</span></button>
+    <button class="lb-nav lb-next" id="lb-next" aria-label="Seuraava"><span class="lb-arrow">›</span></button>
+    <div class="lb-inner">
+      <button class="lb-close" id="lb-close" aria-label="Sulje">✕</button>
+      <div class="lb-content">
+        <div class="lb-image-wrap">
+          <img id="lb-img" src="" alt="">
+        </div>
+        <div class="lb-detail">
+          <h2 class="lb-title" id="lb-title"></h2>
+          <p class="lb-meta mono" id="lb-meta"></p>
+          <p class="lb-price mono" id="lb-price"></p>
+          <div class="lb-swatches" id="lb-swatches"></div>
+          <div class="uv-badge" id="lb-uv" style="display:none;">UV active</div>
+          <p class="lb-desc" id="lb-desc"></p>
+
+          <div id="lb-audio-section" style="display:none;margin-top:1.5rem;">
+            <p class="mono" id="lb-audio-label" style="font-size:0.72rem;margin-bottom:0.5rem;"></p>
+            <audio id="lb-audio" controls style="width:100%;"></audio>
+          </div>
+
+          <a class="btn btn-umber" style="margin-top:1.5rem;display:inline-block;"
+            id="lb-enquire" href="mailto:hello@artwork.fi">Kysy teoksesta</a>
+
+          <!-- Lighting viewer -->
+          <div class="lb-lighting">
+            <div class="lb-lighting-strip" id="lb-lighting-strip"></div>
+            <button class="lb-uv-btn" id="lb-uv-btn" disabled aria-label="UV-valo" title="UV-valo">
+              <span class="uv-icon">🟣</span>
+              <span class="mono">UV</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+  <script src="atmosphere.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>
