@@ -531,13 +531,13 @@ textarea {
 /* ── Art@Work zone ── */
 #artwork-programme {
   background: var(--forest);
-  color: var(--paper);
+  color: var(--theme-text);
 }
 
 #artwork-programme h2,
 #artwork-programme p,
 #artwork-programme .eyebrow {
-  color: var(--paper);
+  color: var(--theme-text);
 }
 
 #artwork-programme .eyebrow {
