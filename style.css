@@ -471,7 +471,7 @@ input[type="color"] {
 .accordion-trigger {
   background: none;
   border: none;
-  color: var(--paper);
+  color: var(--theme-text);
   font-family: var(--font-mono);
   font-size: 0.8rem;
   letter-spacing: 0.08em;
