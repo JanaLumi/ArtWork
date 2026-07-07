@@ -274,6 +274,17 @@
     <select id="voice-menu" class="voice-select">
       <option value="">Loading voices...</option>
     </select>
+
+    <div class="audio-modifiers">
+      <div class="slider-group">
+        <label for="rate-control">Speed:</label>
+        <input type="range" id="rate-control" min="0.5" max="2" value="0.95" step="0.05">
+      </div>
+      <div class="slider-group">
+        <label for="pitch-control">Pitch:</label>
+        <input type="range" id="pitch-control" min="0.5" max="2" value="1.0" step="0.05">
+      </div>
+    </div>
     
     <button id="speech-btn" class="audio-btn" onclick="toggleNarrativeAudio()">
       <span>🔊</span> Listen to Perspective
@@ -456,7 +467,7 @@ function switchPerspective(key) {
   setTimeout(() => buildSvgImage(), 600);
 }
 
-// AUDIO RUNTIME GENERATOR
+// AUDIO RUNTIME GENERATOR WITH ADJUSTABLE RATE & PITCH
 function toggleNarrativeAudio() {
   const btn = document.getElementById('speech-btn');
   
@@ -473,9 +484,14 @@ function toggleNarrativeAudio() {
   btn.innerHTML = "<span>⏹️</span> Stop Narrative Audio";
   
   utterance = new SpeechSynthesisUtterance(rawText);
-  utterance.rate = 0.95; 
   
-  // Assign choice directly from the interactive dropdown matrix index
+  // Dynamic lookup of user control positions
+  const speedVal = parseFloat(document.getElementById('rate-control').value);
+  const pitchVal = parseFloat(document.getElementById('pitch-control').value);
+  
+  utterance.rate = speedVal; 
+  utterance.pitch = pitchVal;
+  
   const selectedVoiceIndex = document.getElementById('voice-menu').value;
   if (selectedVoiceIndex !== "" && systemVoices[selectedVoiceIndex]) {
     utterance.voice = systemVoices[selectedVoiceIndex];
