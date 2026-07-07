@@ -61,7 +61,30 @@
     border-color: #534AB7;
   }
 
-  .audio-panel { display: flex; align-items: center; gap: 0.5rem; position: relative; }
+  /* --- AUDIO SLIDER CONTROLLER STYLES --- */
+  .audio-panel { display: flex; align-items: center; gap: 1rem; position: relative; }
+  
+  .audio-modifiers {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-family: "DM Mono", monospace;
+    font-size: 0.75rem;
+    color: #5f5e5a;
+  }
+
+  .slider-group {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+  }
+
+  .audio-modifiers input[type="range"] {
+    width: 70px;
+    cursor: pointer;
+    accent-color: #534AB7;
+  }
+  /* ----------------------------------------------- */
   
   /* NATIVE VOICE SELECT DROPDOWN */
   .voice-select {
