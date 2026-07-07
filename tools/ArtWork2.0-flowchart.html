@@ -61,7 +61,22 @@
     border-color: #534AB7;
   }
 
-  .audio-panel { display: flex; align-items: center; gap: 0.5rem; }
+  .audio-panel { display: flex; align-items: center; gap: 0.5rem; position: relative; }
+  
+  /* NATIVE VOICE SELECT DROPDOWN */
+  .voice-select {
+    font-family: "DM Mono", monospace;
+    font-size: 0.8rem;
+    padding: 0.5rem;
+    background: #ffffff;
+    border: 1px solid #d3d1c7;
+    border-radius: 4px;
+    color: #2c2c2a;
+    max-width: 180px;
+    cursor: pointer;
+  }
+  .voice-select:focus { outline: none; border-color: #534AB7; }
+
   .audio-btn {
     font-family: "DM Mono", monospace;
     font-size: 0.8rem;
@@ -78,7 +93,43 @@
   .audio-btn:hover { background: #cbdcd5; }
   .audio-btn.playing { background: #ffcdd2; border-color: #d32f2f; color: #b71c1c; }
 
-  /* SPLIT SCREEN VIEW */
+  /* TOOLTIP INTERFACE CONFIGURATION */
+  .info-trigger {
+    background: #f4f3ed;
+    border: 1px solid #d3d1c7;
+    color: #5f5e5a;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    cursor: pointer;
+    font-family: "DM Mono", monospace;
+  }
+  .info-trigger:hover { background: #e8e7df; color: #2c2c2a; }
+  
+  .tooltip-box {
+    display: none;
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    background: #ffffff;
+    border: 0.5px solid #d3d1c7;
+    border-radius: 6px;
+    padding: 1rem;
+    width: 290px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    z-index: 200;
+    font-size: 0.78rem;
+    line-height: 1.45;
+    color: #4a4a46;
+  }
+  .tooltip-box h4 { margin-bottom: 0.4rem; font-weight: 600; color: #2c2c2a; }
+  .tooltip-box.visible { display: block; }
+
+  /* SPLIT SCREEN VIEW WITH TOP-EDGE SYMMETRY */
   .workspace {
     display: grid;
     grid-template-columns: 1fr 400px;
@@ -214,21 +265,28 @@
   <p>System perspectives panel. Adjust configuration perspectives below to transform view layers.</p>
 </header>
 
-<!-- PERSPECTIVE AND CONTROL MATRICES -->
 <div class="console-controls">
   <div class="tabs">
     <button class="tab-btn active" onclick="switchPerspective('journey')">SYSTEM JOURNEY</button>
     <button class="tab-btn" onclick="switchPerspective('overview')">SYSTEM OVERVIEW</button>
   </div>
   <div class="audio-panel">
+    <select id="voice-menu" class="voice-select">
+      <option value="">Loading voices...</option>
+    </select>
+    
     <button id="speech-btn" class="audio-btn" onclick="toggleNarrativeAudio()">
       <span>🔊</span> Listen to Perspective
     </button>
+    <div class="info-trigger" onclick="toggleVoiceTooltip(event)">?</div>
+    <div id="voice-tooltip" class="tooltip-box">
+      <h4>System Voice Configuration</h4>
+      <p>The dropdown displays the speech synthesizers natively present on your current device hardware profile.</p>
+    </div>
   </div>
 </div>
 
 <div class="workspace">
-  <!-- LEFT: DIAGRAM VIEWPORT CONTAINER -->
   <div>
     <div class="legend">
       <div class="legend-item"><div class="legend-dot" style="background:#EF9F27"></div>⏩ Triggers</div>
@@ -241,8 +299,7 @@
     <div id="diagram-wrap">
       <div id="diagram-inner">
         <div id="mermaid-target" class="mermaid">
-          <!-- Mermaid injection target -->
-        </div>
+          </div>
       </div>
 
       <div id="lens">
@@ -254,7 +311,6 @@
     <p id="hint">Hover to magnify &nbsp;·&nbsp; scroll wheel to adjust zoom &nbsp;·&nbsp; hold mouse click to scroll page</p>
   </div>
 
-  <!-- RIGHT: PERSPECTIVE NARRATIVE PANEL -->
   <div class="narrative-card">
     <h2 id="narrative-title">Loading Perspective...</h2>
     <div id="narrative-content" class="narrative-text"></div>
@@ -328,36 +384,77 @@ const perspectives = {
 let currentPerspective = 'journey';
 let synth = window.speechSynthesis;
 let utterance = null;
+let systemVoices = [];
 
 mermaid.initialize({ startOnLoad: false, securityLevel: 'loose' });
+
+// VOICE INVENTORY MATRIX DISCOVERY
+function populateVoiceMenu() {
+  if (!synth) return;
+  
+  systemVoices = synth.getVoices();
+  const voiceMenu = document.getElementById('voice-menu');
+  
+  // Clear default container text
+  voiceMenu.innerHTML = '';
+  
+  if (systemVoices.length === 0) {
+    const opt = document.createElement('option');
+    opt.textContent = "No system voices detected";
+    voiceMenu.appendChild(opt);
+    return;
+  }
+  
+  systemVoices.forEach((voice, index) => {
+    const option = document.createElement('option');
+    option.value = index;
+    option.textContent = `${voice.name} (${voice.lang})`;
+    
+    // Automatically select Hazel if it matches, otherwise use default priority
+    if (voice.name.includes('Hazel')) {
+      option.selected = true;
+    }
+    voiceMenu.appendChild(option);
+  });
+}
+
+// Speech APIs load voices asynchronously on different engines; monitor the callback trigger
+if (synth && typeof synth.addEventListener === 'function') {
+  synth.addEventListener('voiceschanged', populateVoiceMenu);
+}
+// Run instantaneous invocation for engines where voices are pre-warmed
+setTimeout(populateVoiceMenu, 200);
 
 // SWITCH PERSPECTIVES LAYER
 function switchPerspective(key) {
   currentPerspective = key;
   stopAudio();
   
-  // Toggle UI Class Actions
   document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-  event.target.classList.add('active');
   
-  // Render Text
+  if (window.event && window.event.target && window.event.target.classList) {
+    window.event.target.classList.add('active');
+  } else {
+    const btns = document.querySelectorAll('.tab-btn');
+    if(key === 'journey') btns[0].classList.add('active');
+    if(key === 'overview') btns[1].classList.add('active');
+  }
+  
   document.getElementById('narrative-title').innerText = perspectives[key].title;
   document.getElementById('narrative-content').innerHTML = perspectives[key].text;
   
-  // Re-Render Mermaid Layout Matrix
   const target = document.getElementById('mermaid-target');
   target.removeAttribute('data-processed');
   target.innerHTML = perspectives[key].code;
   
-  svgImg = null; // Reset visual lens cache
+  svgImg = null;
   mermaid.parse(perspectives[key].code);
   mermaid.run({ nodes: [target] });
   
-  // Schedule a visual rebuild loop for the magnifying glass lens buffer
   setTimeout(() => buildSvgImage(), 600);
 }
 
-// SPEECH ENGINE SYSTEM OVERLAYS
+// AUDIO RUNTIME GENERATOR
 function toggleNarrativeAudio() {
   const btn = document.getElementById('speech-btn');
   
@@ -366,7 +463,6 @@ function toggleNarrativeAudio() {
     return;
   }
   
-  // Extract text blocks
   const div = document.createElement('div');
   div.innerHTML = perspectives[currentPerspective].text;
   const rawText = div.innerText;
@@ -375,7 +471,13 @@ function toggleNarrativeAudio() {
   btn.innerHTML = "<span>⏹️</span> Stop Narrative Audio";
   
   utterance = new SpeechSynthesisUtterance(rawText);
-  utterance.rate = 0.95; // Steady, controlled narrative rhythm
+  utterance.rate = 0.95; 
+  
+  // Assign choice directly from the interactive dropdown matrix index
+  const selectedVoiceIndex = document.getElementById('voice-menu').value;
+  if (selectedVoiceIndex !== "" && systemVoices[selectedVoiceIndex]) {
+    utterance.voice = systemVoices[selectedVoiceIndex];
+  }
   
   utterance.onend = () => {
     btn.classList.remove('playing');
@@ -394,7 +496,17 @@ function stopAudio() {
   btn.innerHTML = "<span>🔊</span> Listen to Perspective";
 }
 
-// --- MAGNIFYING LENS RENDERING CORE ENGINE (MAINTAINED FROM SOURCE) ---
+function toggleVoiceTooltip(e) {
+  e.stopPropagation();
+  const box = document.getElementById('voice-tooltip');
+  box.classList.toggle('visible');
+}
+
+document.addEventListener('click', () => {
+  document.getElementById('voice-tooltip').classList.remove('visible');
+});
+
+// --- MAGNIFYING LENS RENDERING CORE ENGINE ---
 const wrap    = document.getElementById('diagram-wrap');
 const inner   = document.getElementById('diagram-inner');
 const lens    = document.getElementById('lens');
@@ -512,7 +624,6 @@ wrap.addEventListener('wheel', function(e) {
   badgeTimeout = setTimeout(() => { badge.style.display = 'none'; }, 1200);
 }, { passive: false });
 
-// INIT ON ENTRY LOOP
 window.addEventListener('DOMContentLoaded', () => {
   switchPerspective('journey');
 });
