@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Art@Work — Theme Viewer</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Courier New', monospace;
+      background: #0E0E12;
+      color: #E8E4DC;
+      padding: 2rem;
+      line-height: 1.5;
+    }
+
+    h1 {
+      font-size: 1rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #8B6F4E;
+      margin-bottom: 0.25rem;
+    }
+
+    .subtitle {
+      font-size: 0.72rem;
+      color: #7A7468;
+      margin-bottom: 2.5rem;
+      letter-spacing: 0.05em;
+    }
+
+    /* Column headers */
+    .header-row {
+      display: grid;
+      grid-template-columns: 140px repeat(8, 1fr) 100px;
+      gap: 4px;
+      margin-bottom: 4px;
+      padding: 0 0 0.5rem;
+      border-bottom: 1px solid #2A2A3A;
+    }
+
+    .header-cell {
+      font-size: 0.62rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #7A7468;
+      padding: 0 0.4rem;
+    }
+
+    /* Mood rows */
+    .mood-row {
+      display: grid;
+      grid-template-columns: 140px repeat(8, 1fr) 100px;
+      gap: 4px;
+      margin-bottom: 4px;
+      height: 52px;
+    }
+
+    .mood-label {
+      display: flex;
+      align-items: center;
+      font-size: 0.72rem;
+      letter-spacing: 0.04em;
+      color: #C4B8A8;
+      padding: 0 0.5rem;
+      border: 1px solid #2A2A3A;
+      border-radius: 2px;
+    }
+
+    .colour-cell {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border-radius: 2px;
+      font-size: 0.58rem;
+      letter-spacing: 0.04em;
+      padding: 0.3rem;
+      gap: 0.2rem;
+      cursor: default;
+      transition: transform 0.1s;
+    }
+
+    .colour-cell:hover {
+      transform: scaleY(1.05);
+      z-index: 1;
+    }
+
+    .colour-hex {
+      font-size: 0.6rem;
+      opacity: 0.75;
+    }
+
+    .colour-name {
+      font-size: 0.55rem;
+      opacity: 0.6;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    /* Animation column */
+    .anim-cell {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.65rem;
+      letter-spacing: 0.04em;
+      color: #7A7468;
+      border: 1px solid #2A2A3A;
+      border-radius: 2px;
+      padding: 0.3rem;
+      text-align: center;
+    }
+
+    /* Section dividers */
+    .section-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #8B6F4E;
+      padding: 1.25rem 0 0.4rem;
+      border-top: 1px solid #2A2A3A;
+      margin-top: 0.5rem;
+      grid-column: 1 / -1;
+    }
+
+    .sections-wrap {
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Legend */
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid #2A2A3A;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.65rem;
+      color: #7A7468;
+    }
+
+    .legend-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 2px;
+    }
+
+    /* Tooltip on hover */
+    .colour-cell[title]:hover::after {
+      content: attr(title);
+      position: absolute;
+      bottom: calc(100% + 4px);
+      left: 50%;
+      transform: translateX(-50%);
+      background: #1C1C1A;
+      border: 1px solid #3A3A4A;
+      color: #E8E4DC;
+      font-size: 0.65rem;
+      padding: 0.3rem 0.5rem;
+      border-radius: 2px;
+      white-space: nowrap;
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    .colour-cell { position: relative; }
+
+    .error {
+      color: #C07060;
+      font-size: 0.8rem;
+      margin-top: 1rem;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Art@Work — Theme Viewer</h1>
+  <p class="subtitle">Reads data/themes.csv · text colour auto-switches by luminance · hover for hex value</p>
+
+  <div id="viewer"></div>
+
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:#1A1A2A;border:1px solid #3A3A4A"></div> bg</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#242430;border:1px solid #3A3A4A"></div> surface</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#3A3A5A;border:1px solid #3A3A4A"></div> border</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#8B6F4E;border:1px solid #3A3A4A"></div> accent</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#E8E4DC;border:1px solid #3A3A4A"></div> text_light</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#1C1C1A;border:1px solid #3A3A4A"></div> text_dark</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#7A7468;border:1px solid #3A3A4A"></div> mid_light</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#4A4840;border:1px solid #3A3A4A"></div> mid_dark</div>
+  </div>
+
+  <script>
+    const COLUMNS = [
+      { key: 'bg',         label: 'bg' },
+      { key: 'surface',    label: 'surface' },
+      { key: 'border',     label: 'border' },
+      { key: 'accent',     label: 'accent' },
+      { key: 'text_light', label: 'text · light' },
+      { key: 'text_dark',  label: 'text · dark' },
+      { key: 'mid_light',  label: 'mid · light' },
+      { key: 'mid_dark',   label: 'mid · dark' },
+    ];
+
+    const SECTIONS = [
+      { label: 'Time of day', moods: ['dawn','morning','midday','afternoon','dusk','blue_hour','evening','deep_night'] },
+      { label: 'Moon phases', moods: ['new','waxing_crescent','first_quarter','waxing_gibbous','full','waning_gibbous','last_quarter','waning_crescent','strawberry_moon'] },
+      { label: 'Weather',     moods: ['clear','overcast','rain','snow','fog','storm','hot','cold'] },
+      { label: 'Special',     moods: ['city_night'] },
+    ];
+
+    function luminance(hex) {
+      const h = hex.replace('#', '');
+      const rgb = [0, 2, 4].map(i => {
+        const c = parseInt(h.slice(i, i + 2), 16) / 255;
+        return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+      });
+      return 0.2126 * rgb[0] + 0.7152 * rgb[1] + 0.0722 * rgb[2];
+    }
+
+    function textOnBg(hex) {
+      return luminance(hex) > 0.35 ? '#1C1C1A' : '#E8E4DC';
+    }
+
+    function renderViewer(palettes) {
+      const viewer = document.getElementById('viewer');
+
+      // Header row
+      const header = document.createElement('div');
+      header.className = 'header-row';
+      header.innerHTML = `<div class="header-cell">mood</div>` +
+        COLUMNS.map(c => `<div class="header-cell">${c.label}</div>`).join('') +
+        `<div class="header-cell">animation</div>`;
+      viewer.appendChild(header);
+
+      // Sections
+      SECTIONS.forEach(section => {
+        const sectionDiv = document.createElement('div');
+        sectionDiv.className = 'sections-wrap';
+
+        const sectionLabel = document.createElement('div');
+        sectionLabel.className = 'section-label';
+        sectionLabel.textContent = section.label;
+        sectionDiv.appendChild(sectionLabel);
+
+        section.moods.forEach(moodKey => {
+          const p = palettes[moodKey];
+          if (!p) return;
+
+          const row = document.createElement('div');
+          row.className = 'mood-row';
+
+          // Mood label
+          const label = document.createElement('div');
+          label.className = 'mood-label';
+          label.textContent = moodKey.replace(/_/g, ' ');
+          row.appendChild(label);
+
+          // Colour cells
+          COLUMNS.forEach(col => {
+            const raw = (p[col.key] || '').trim();
+            const hex = '#' + raw.replace('#', '');
+            const fg  = textOnBg(hex);
+
+            const cell = document.createElement('div');
+            cell.className  = 'colour-cell';
+            cell.style.background = hex;
+            cell.style.color      = fg;
+            cell.title = hex;
+            cell.innerHTML = `
+              <span class="colour-hex">${hex}</span>
+            `;
+            row.appendChild(cell);
+          });
+
+          // Animation cell
+          const anim = document.createElement('div');
+          anim.className   = 'anim-cell';
+          anim.textContent = p.animation || '—';
+          row.appendChild(anim);
+
+          sectionDiv.appendChild(row);
+        });
+
+        viewer.appendChild(sectionDiv);
+      });
+
+      // Any moods not in sections
+      const knownMoods = SECTIONS.flatMap(s => s.moods);
+      const extra = Object.keys(palettes).filter(k => !knownMoods.includes(k));
+      if (extra.length) {
+        const sectionDiv = document.createElement('div');
+        sectionDiv.className = 'sections-wrap';
+        const sectionLabel = document.createElement('div');
+        sectionLabel.className = 'section-label';
+        sectionLabel.textContent = 'Other';
+        sectionDiv.appendChild(sectionLabel);
+        extra.forEach(moodKey => {
+          // same row rendering — reuse by calling recursive fn would be cleaner
+          // but keeping flat for readability
+          const p   = palettes[moodKey];
+          const row = document.createElement('div');
+          row.className = 'mood-row';
+          const label = document.createElement('div');
+          label.className = 'mood-label';
+          label.textContent = moodKey.replace(/_/g, ' ');
+          row.appendChild(label);
+          COLUMNS.forEach(col => {
+            const raw = (p[col.key] || '').trim();
+            const hex = '#' + raw.replace('#', '');
+            const fg  = textOnBg(hex);
+            const cell = document.createElement('div');
+            cell.className = 'colour-cell';
+            cell.style.background = hex;
+            cell.style.color      = fg;
+            cell.title = hex;
+            cell.innerHTML = `<span class="colour-hex">${hex}</span>`;
+            row.appendChild(cell);
+          });
+          const anim = document.createElement('div');
+          anim.className   = 'anim-cell';
+          anim.textContent = p.animation || '—';
+          row.appendChild(anim);
+          sectionDiv.appendChild(row);
+        });
+        viewer.appendChild(sectionDiv);
+      }
+    }
+
+    // Load from relative path — works when served from repo root
+    Papa.parse('../data/themes.csv', {
+      download:       true,
+      header:         true,
+      skipEmptyLines: true,
+      complete: ({ data }) => {
+        const palettes = {};
+        data.forEach(row => { if (row.mood) palettes[row.mood] = row; });
+        renderViewer(palettes);
+      },
+      error: err => {
+        document.getElementById('viewer').innerHTML =
+          `<p class="error">Could not load ../data/themes.csv — make sure you are serving from the repo root, not opening the file directly. Error: ${err}</p>`;
+      }
+    });
+  </script>
+
+</body>
+</html>
