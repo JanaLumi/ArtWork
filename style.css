@@ -202,6 +202,16 @@ nav {
   text-decoration: none;
 }
 
+/* Lighter forest for dark sky zone so the button is readable */
+[data-theme="dark"] #hero .btn-forest {
+  color: #6AAF8A;
+  border-color: #6AAF8A;
+}
+[data-theme="dark"] #hero .btn-forest:hover {
+  background: #6AAF8A;
+  color: #0E0E12;
+}
+
 .btn-umber {
   color: var(--umber);
   border-color: var(--umber);
@@ -357,12 +367,12 @@ input[type="color"] {
 }
 
 #search .btn-ink {
-  color: var(--paper);
-  border-color: var(--paper);
+  color: #E8E4DC;
+  border-color: #E8E4DC;
 }
 #search .btn-ink:hover {
-  background: var(--paper);
-  color: var(--ink);
+  background: #E8E4DC;
+  color: #0E0E14;
 }
 
 /* ── Results grid ── */
@@ -786,11 +796,7 @@ footer {
   transition: background 0.1s;
 }
 
-.city-option:hover,
-.city-option:focus {
-  background: rgba(255,255,255,0.09);
-  outline: none;
-}
+.city-option:hover { background: rgba(255,255,255,0.06); }
 
 .city-name {
   font-family: var(--font-mono);
