@@ -36,4 +36,6 @@ flowchart TD
         E1 --->|"Verified Balance\nCompliance"| E3["Render Filtered Viewport\nGrid Matrix"]
     end
 
-This layout outlines the five functional spheres comprising the complete console ecosystem. It visualizes how separate input panels evaluate physical material truth against automated digital metrics independently within their own unique zones.
+<p>This structural overview outlines the five functional phases comprising the complete software architecture ecosystem. It visualises the total map layout from initial client-side storage files down to the final conditional browser rendering array.</p>
+<p>Phase 1 handles data extraction through localised models, mapping metadata vectors without external network dependency. Phase 2 joins these values against your audited environmental indicators to construct a complete sustainability profile.</p>
+<p>Phase 3 acts as the localised translation layout where physical structural CSV modifications compile cleanly down into an indexable data block. Phase 4 and Phase 5 represent the client-side system interface layer, operating on client-side memory loops to run continuous mathematical confirmation routines before any visual data blocks map onto the viewport display matrix.</p>
