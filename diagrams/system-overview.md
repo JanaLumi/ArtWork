@@ -1,4 +1,4 @@
-title: "System Overview",
+title: "System Overview — Structural Architecture",
 text: `<p>This structural overview outlines the five functional phases comprising the complete software architecture ecosystem. It visualizes the total map layout from initial client-side storage files down to the final conditional browser rendering array.</p>
        <p>Phase 1 handles data extraction through localized models, mapping metadata vectors without external network dependency. Phase 2 joins these values against your audited environmental indicators to construct a complete sustainability profile.</p>
        <p>Phase 3 acts as the localized translation layout where physical structural CSV modifications compile cleanly down into an indexable data block. Phase 4 and Phase 5 represent the client-side system interface layer, operating on client-side memory loops to run continuous mathematical confirmation routines before any visual data blocks map onto the viewport display matrix.</p>`,
