@@ -1,6 +1,7 @@
-# **ArtWork – Concept Outline**
+# ArtWork
+**Outline**
 
-**Highlights**
+## **Highlights**
 
 * Interactive decision-support for discovering and selecting artworks.  
 * Explores lighting and situatedness: artworks can be viewed under different lighting contexts and imagined within lived spaces.  
