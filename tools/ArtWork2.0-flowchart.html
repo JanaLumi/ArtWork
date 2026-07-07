@@ -3,22 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Art@Work — system diagram</title>
+<title>Art@Work — system diagram console</title>
 <style>
-
   @font-face {
     font-family: "Merriweather";
-    src: url("https://janalumi.github.io/Dustbuster/fonts/Merriweather-Regular.ttf") format("truetype");
-  /*  font-weight: normal;
-    font-style: normal; */
+    src: url("https://janalumi.github.io/ArtWork/fonts/Merriweather-Regular.ttf") format("truetype");
     font-display: swap;
   }
 
   @font-face {
     font-family: "DM Mono";
-    src: url("https://janalumi.github.io/Dustbuster/fonts/DMMono-Regular.ttf") format("truetype");
-  /*  font-weight: normal;
-    font-style: normal; */
+    src: url("https://janalumi.github.io/ArtWork/fonts/DMMono-Regular.ttf") format("truetype");
     font-display: swap;
   }
  
@@ -32,9 +27,68 @@
     padding: 2rem;
   }
 
-  header { margin-bottom: 1.25rem; }
-  header h1 { font-family: Merriweather, Georgia, serif; font-size: 1.3rem; font-weight: 500; color: #2c2c2a; }
-  header p { font-family: "DM Mono", Courier, monospace, sans-serif; font-size: 0.85rem; color: #888780; margin-top: 0.2rem; }
+  header { margin-bottom: 1.5rem; }
+  header h1 { font-family: Merriweather, Georgia, serif; font-size: 1.4rem; font-weight: 500; color: #2c2c2a; }
+  header p { font-family: "DM Mono", Courier, monospace, sans-serif; font-size: 0.85rem; color: #5f5e5a; margin-top: 0.2rem; }
+
+  /* PERSPECTIVE NAVIGATION PANEL */
+  .console-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #ffffff;
+    padding: 0.75rem 1.2rem;
+    border: 0.5px solid #d3d1c7;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+  }
+
+  .tabs { display: flex; gap: 0.5rem; }
+  .tab-btn {
+    font-family: "DM Mono", monospace;
+    font-size: 0.8rem;
+    padding: 0.5rem 1rem;
+    background: #f4f3ed;
+    border: 1px solid #d3d1c7;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .tab-btn:hover { background: #e8e7df; }
+  .tab-btn.active {
+    background: #534AB7;
+    color: #ffffff;
+    border-color: #534AB7;
+  }
+
+  .audio-panel { display: flex; align-items: center; gap: 0.5rem; }
+  .audio-btn {
+    font-family: "DM Mono", monospace;
+    font-size: 0.8rem;
+    padding: 0.5rem 1rem;
+    background: #e1f5ee;
+    border: 1px solid #1D9E75;
+    color: #1b5e20;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .audio-btn:hover { background: #cbdcd5; }
+  .audio-btn.playing { background: #ffcdd2; border-color: #d32f2f; color: #b71c1c; }
+
+  /* SPLIT SCREEN VIEW */
+  .workspace {
+    display: grid;
+    grid-template-columns: 1fr 400px;
+    gap: 1.5rem;
+    align-items: start;
+  }
+
+  @media (max-width: 1024px) {
+    .workspace { grid-template-columns: 1fr; }
+  }
 
   .legend {
     display: flex;
@@ -67,7 +121,7 @@
   }
 
   #diagram-inner {
-    padding: 3rem 4rem; // this is where you edit padding for the border of the flowchart
+    padding: 2rem;
   }
 
   #diagram-inner svg {
@@ -76,6 +130,30 @@
     display: block;
   }
 
+  /* NARRATIVE SIDEBAR PANEL */
+  .narrative-card {
+    background: #ffffff;
+    border: 0.5px solid #d3d1c7;
+    border-radius: 12px;
+    padding: 1.5rem;
+    max-height: 75vh;
+    overflow-y: auto;
+  }
+  .narrative-card h2 {
+    font-size: 1.15rem;
+    font-weight: 500;
+    margin-bottom: 0.75rem;
+    border-bottom: 1px solid #f4f3ed;
+    padding-bottom: 0.5rem;
+  }
+  .narrative-text {
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: #3a3a38;
+  }
+  .narrative-text p { margin-bottom: 1rem; }
+
+  /* SPYGLOSS LENS */
   #lens {
     position: absolute;
     width: 220px;
@@ -87,6 +165,7 @@
     border: 2.5px solid #534AB7;
     outline: 1px solid #AFA9EC;
     background: #fff;
+    z-index: 100;
   }
 
   #lens canvas {
@@ -115,7 +194,7 @@
     padding: 2px 8px;
     border-radius: 20px;
     pointer-events: none;
-    z-index: 10;
+    z-index: 110;
     display: none;
     font-family: -apple-system, sans-serif;
   }
@@ -126,108 +205,196 @@
     color: #888780;
     margin-top: 0.6rem;
   }
-
-  .mermaid { font-size: 13px; }
 </style>
 </head>
 <body>
 
 <header>
-  <h1>Art@Work — system diagram</h1>
-  <p>Hover to explore. Scroll wheel adjusts magnification. For vertical scroll, hold down a mouse button while scrolling</p>
+  <h1>Art@Work — system diagram console</h1>
+  <p>System perspectives panel. Adjust configuration perspectives below to transform view layers.</p>
 </header>
 
-<div class="legend">
-  <div class="legend-item"><div class="legend-dot" style="background:#EF9F27"></div>⏩Triggers</div>
-  <div class="legend-item"><div class="legend-dot" style="background:#1D9E75"></div>🔁Automated processes</div>
-  <div class="legend-item"><div class="legend-dot" style="background:#7F77DD"></div>🎛️Decisions</div>
-  <div class="legend-item"><div class="legend-dot" style="background:#D85A30"></div>🎚️Your manual steps</div>
-  <div class="legend-item"><div class="legend-dot" style="background:#888780"></div>⏯️Start / end</div>
+<!-- PERSPECTIVE AND CONTROL MATRICES -->
+<div class="console-controls">
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchPerspective('journey')">SYSTEM JOURNEY</button>
+    <button class="tab-btn" onclick="switchPerspective('overview')">SYSTEM OVERVIEW</button>
+  </div>
+  <div class="audio-panel">
+    <button id="speech-btn" class="audio-btn" onclick="toggleNarrativeAudio()">
+      <span>🔊</span> Listen to Perspective
+    </button>
+  </div>
 </div>
 
-<div id="diagram-wrap">
-  <div id="diagram-inner">
-    <div class="mermaid">
-%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#EEEDFE', 'primaryBorderColor': '#534AB7', 'primaryTextColor': '#26215C', 'lineColor': '#888780', 'secondaryColor': '#E1F5EE', 'tertiaryColor': '#FAEEDA', 'fontSize': '13px'}}}%%
-flowchart TD
-    %% Styling and Theme (Clean, High-Contrast Blueprint)
-    classDef input fill:#ffffff,stroke:#333,stroke-width:2px,color:#000;
-    classDef process fill:#f0f4c3,stroke:#afb42b,stroke-width:2px,color:#2e7d32;
-    classDef storage fill:#ffe082,stroke:#f57c00,stroke-width:2px,color:#5d4037;
-    classDef ui fill:#e1f5fe,stroke:#0288d1,stroke-width:2px,color:#01579b;
-    classDef lock fill:#ffcdd2,stroke:#c62828,stroke-width:2px,color:#b71c1c;
-
-    %% --- PHASE 1: DATA INGESTION & COGNITION ---
-    subgraph Phase_1 [Phase 1: Local Automation & Data Extraction]
-        A[Raw Image Directory <br> Local Hard Drive] -->|Read File Loop| B[Ollama Local Environment]
-        B -->|Llama 3.2 Vision Model| C{Image Assessment Prompt}
-        
-        C -->|Pixel Edge Analysis| D[Entropy Score <br> Float 0.0 to 1.0]
-        C -->|Color Histogram Scan| E[Color Temp Ratio <br> Cool to Warm]
-        C -->|Object Recognition| F[Semantic Tag Array <br> 'human', 'river', 'abstract']
-    end
-    class A input; class B,C process; class D,E,F storage;
-
-    %% --- PHASE 2: REGENERATIVE & MATERIAL METRICS ---
-    subgraph Phase_2 [Phase 2: Calculating Material & Ecological Debt]
-        G[Manual Audit Data <br> Studio Practices] --> H{Material Composition Analysis}
-        
-        H -->|Identify Base Medium| I[Lifecycle Tag <br> Biodegradable / Synthetic / Upcycled]
-        H -->|Verify Sourcing & Transport| J[Carbon Footprint Offset <br> Estimated KG CO2 / Score]
-        H -->|Verify Gallery Commission| K[Labor Equity Score <br> Fair Profit Split Ratio]
-    end
-    class G input; class H process; class I,J,K storage;
-
-    %% --- PHASE 3: THE STRUCTURAL DATA CONVERSION ---
-    subgraph Phase_3 [Phase 3: The Spreadsheet Intermediary]
-        D & E & F & I & J & K -->|Auto-Populate Columns| L[Master Inventory Spreadsheet <br> .CSV File Format]
-        M[Manual Text Edits <br> Titles / Overrides] -->|Direct Spreadsheet Input| L
-        L -->|Export Command Line / App| N[(gallery_data.json <br> Static JSON File)]
-    end
-    class L storage; class M input; class N storage;
-
-    %% --- PHASE 4: COCKPIT CONTROLS & FILTER CRITERIA ---
-    subgraph Phase_4 [Phase 4: Client-Side Dashboard Interface]
-        N -->|Loaded into Browser Memory| O[GitHub Pages Web Application]
-        
-        subgraph UI_Inputs [User Interface Control Panel]
-            P[Color Wavelength Slider] -->|Filter Rule| P1[Fuzzy Hex Match]
-            Q[Compositional Noise Dial] -->|Filter Rule| Q1[Entropy Value Range]
-            R[Commercial Speculation Dial] -->|Financial Track| R1[Gallery Exclusivity & ROI Target]
-            S[Material Lifecycle Toggle] -->|Ethical Track| S1[Exclude Synthetics / Plastics]
-        end
-    end
-    class O,P,Q,R,S ui; class P1,Q1,R1,S1 process;
-
-    %% --- PHASE 5: SYSTEM INTERLOCK & RUNTIME LOGIC ---
-    subgraph Phase_5 [Phase 5: The Validation Interlock & Conditional Output]
-        R1 & S1 --> T{Ecosystem Calibration Safety Loop}
-        
-        T -->|Speculation Score > Material Sustainability| U[Trigger System Imbalance <br> Interlock Lockout / Alert Mode]
-        T -->|Material Sustainability >= Speculation Score| V[Pass Verified Data Subset]
-        
-        P1 & Q1 & V -->|Execute Native JavaScript Filter Array| W[Recessed Visual Grid Display]
-        W -->|True Match| X[Render Art Piece on Wall]
-        W -->|False Match| Y[Slam Virtual Window Shut / Dim File]
-    end
-    class T lock; class U lock; class V,W,X,Y process;
-      
+<div class="workspace">
+  <!-- LEFT: DIAGRAM VIEWPORT CONTAINER -->
+  <div>
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot" style="background:#EF9F27"></div>⏩ Triggers</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#1D9E75"></div>🔁 Automated processes</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#7F77DD"></div>🎛️ Decisions</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#D85A30"></div>🎚️ Your manual steps</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#888780"></div>⏯️ Start / end</div>
     </div>
+
+    <div id="diagram-wrap">
+      <div id="diagram-inner">
+        <div id="mermaid-target" class="mermaid">
+          <!-- Mermaid injection target -->
+        </div>
+      </div>
+
+      <div id="lens">
+        <canvas id="lens-canvas" width="220" height="220"></canvas>
+        <div id="lens-rim"></div>
+      </div>
+      <div id="zoom-badge">2×</div>
+    </div>
+    <p id="hint">Hover to magnify &nbsp;·&nbsp; scroll wheel to adjust zoom &nbsp;·&nbsp; hold mouse click to scroll page</p>
   </div>
 
-  <div id="lens">
-    <canvas id="lens-canvas" width="220" height="220"></canvas>
-    <div id="lens-rim"></div>
+  <!-- RIGHT: PERSPECTIVE NARRATIVE PANEL -->
+  <div class="narrative-card">
+    <h2 id="narrative-title">Loading Perspective...</h2>
+    <div id="narrative-content" class="narrative-text"></div>
   </div>
-  <div id="zoom-badge">2×</div>
 </div>
-
-<p id="hint">Hover to magnify &nbsp;·&nbsp; scroll wheel to adjust zoom &nbsp;·&nbsp; works best in a browser</p>
 
 <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
 <script>
-mermaid.initialize({ startOnLoad: true, securityLevel: 'loose' });
+// PERSPECTIVE ARCHIVE DATA MATRIX
+const perspectives = {
+  journey: {
+    title: "ArtWork 2.0 — The Story of the System",
+    text: `<p>Every time you drop a batch of new images into your local storage folder, the ingestion script wakes up. It doesn't interpret the artistic meaning of the images; it reads them purely for structural parameters. It looks at each image file and executes three distinct calculations in sequence.</p>
+           <p>First, it runs a pixel-edge contrast algorithm to determine the mathematical complexity of the image, assigning it an Entropy Score. Second, it groups the pixel colors into a histogram to map the ratio of cool to warm wavelengths. Third, it passes the image to a local, offline vision model running via Ollama to pull objective keyword tags—"geometric, floral, minimal". It appends these metrics as a clean, raw line item in your spreadsheet.</p>
+           <p>The second part of the ledger relies entirely on your own physical knowledge of the object. You open the spreadsheet and log the raw material truth of the piece: base medium, shipping footprint distance, and the gallery split. Once you run the local compiler, this spreadsheet collapses into a single, clean structured JSON database file.</p>
+           <p>The dashboard itself is governed by a strict mathematical law: System Balance. If you move the Commercial Speculation slider past 70% to chase market value, the runtime logic hits a hard brake if the material is synthetic. The dashboard refuses to process the query, entering an Asymmetry Lockout, emitting a low-frequency ambient drone until you balance the scales. Once the internal equations balance out cleanly, the gate opens, rendering your perfect matching art piece.</p>`,
+    code: `flowchart TD
+      %%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#EEEDFE', 'primaryBorderColor': '#534AB7', 'primaryTextColor': '#26215C', 'lineColor': '#888780', 'secondaryColor': '#E1F5EE', 'fontSize': '13px'}}}%%
+      classDef trigger fill:#fff3e0,stroke:#ff9800,stroke-width:2px,color:#e65100;
+      classDef system fill:#e1f5fe,stroke:#0288d1,stroke-width:2px,color:#01579b;
+      classDef database fill:#ffe082,stroke:#f57c00,stroke-width:2px,color:#5d4037;
+      classDef gate fill:#ffcdd2,stroke:#c62828,stroke-width:2px,color:#b71c1c;
 
+      subgraph Step_1 [1. The Local Scan Cycle]
+          A[User drops files into raw directory] ---> B[Trigger Ingestion Script]
+          B --> C[Ollama Local Vision Model]
+          C --> D[Extract Entropy & Color Hex Arrays]
+      end
+      subgraph Step_2 [2. Material Audit Ledger]
+          D ---> G[Auto-Append to local spreadsheet]
+          H[User Input: Manual Material Sourcing Audit] --> G
+          G --> I[(Compile Static JSON Database File)]
+      end
+      subgraph Step_3 [3. The Balance Interlock]
+          I --> J[Load into Browser Memory Dashboard]
+          K[User Adjusts Cockpit Control Panel] --> J
+          J --> L{The Operational Governor Check}
+          L -->|Speculation > Sustainability| M[State: SYSTEM ASYMMETRY <br> Trigger Lockout Mode]
+          L -->|Constraints Passed| N[Execute Array Filters]
+          N --> O[Illuminate Verified Art Variant]
+      end
+      class A,H,K trigger; class B,C,D,J,L,N,O system; class G,I database; class M gate;`
+  },
+  overview: {
+    title: "System Overview",
+    text: `<p>This structural overview outlines the five functional phases comprising the complete software architecture ecosystem. It visualizes the total map layout from initial client-side storage files down to the final conditional browser rendering array.</p>
+           <p>Phase 1 handles data extraction through localized models, mapping metadata vectors without external network dependency. Phase 2 joins these values against your audited environmental indicators to construct a complete sustainability profile.</p>
+           <p>Phase 3 acts as the localized translation layout where physical structural CSV modifications compile cleanly down into an indexable data block. Phase 4 and Phase 5 represent the client-side system interface layer, operating on client-side memory loops to run continuous mathematical confirmation routines before any visual data blocks map onto the viewport display matrix.</p>`,
+    code: `flowchart TD
+      %%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#EEEDFE', 'primaryBorderColor': '#534AB7', 'primaryTextColor': '#26215C', 'lineColor': '#888780', 'secondaryColor': '#E1F5EE', 'fontSize': '13px'}}}%%
+      subgraph P1 [Phase 1: Local Ingestion Engine]
+          Direction_A[Local File Scan Layer] --> Direction_B[Local Automated Vision Extraction]
+      end
+      subgraph P2 [Phase 2: Carbon & Material Matrix]
+          Direction_C[Studio Audits] --> Direction_D[Sourcing & Labor Calculations]
+      end
+      subgraph P3 [Phase 3: The Intermediate Serialization]
+          P1 & P2 --> Direction_E[System Spreadsheet Pipeline] --> Direction_F[(Structured JSON Archive Data)]
+      end
+      subgraph P4 [Phase 4: Client Interface Controls]
+          Direction_F --> Direction_G[Neumorphic Cockpit Viewport]
+      end
+      subgraph P5 [Phase 5: Safety Matrix & Output]
+          Direction_G --> Direction_H{The Earth Debt Governor Gate}
+          Direction_H -->|Verified Compliance| Direction_I[Render Filtered Grid Engine]
+      end`
+  }
+};
+
+// GLOBAL STATES
+let currentPerspective = 'journey';
+let synth = window.speechSynthesis;
+let utterance = null;
+
+mermaid.initialize({ startOnLoad: false, securityLevel: 'loose' });
+
+// SWITCH PERSPECTIVES LAYER
+function switchPerspective(key) {
+  currentPerspective = key;
+  stopAudio();
+  
+  // Toggle UI Class Actions
+  document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+  event.target.classList.add('active');
+  
+  // Render Text
+  document.getElementById('narrative-title').innerText = perspectives[key].title;
+  document.getElementById('narrative-content').innerHTML = perspectives[key].text;
+  
+  // Re-Render Mermaid Layout Matrix
+  const target = document.getElementById('mermaid-target');
+  target.removeAttribute('data-processed');
+  target.innerHTML = perspectives[key].code;
+  
+  svgImg = null; // Reset visual lens cache
+  mermaid.parse(perspectives[key].code);
+  mermaid.run({ nodes: [target] });
+  
+  // Schedule a visual rebuild loop for the magnifying glass lens buffer
+  setTimeout(() => buildSvgImage(), 600);
+}
+
+// SPEECH ENGINE SYSTEM OVERLAYS
+function toggleNarrativeAudio() {
+  const btn = document.getElementById('speech-btn');
+  
+  if (btn.classList.contains('playing')) {
+    stopAudio();
+    return;
+  }
+  
+  // Extract text blocks
+  const div = document.createElement('div');
+  div.innerHTML = perspectives[currentPerspective].text;
+  const rawText = div.innerText;
+  
+  btn.classList.add('playing');
+  btn.innerHTML = "<span>⏹️</span> Stop Narrative Audio";
+  
+  utterance = new SpeechSynthesisUtterance(rawText);
+  utterance.rate = 0.95; // Steady, controlled narrative rhythm
+  
+  utterance.onend = () => {
+    btn.classList.remove('playing');
+    btn.innerHTML = "<span>🔊</span> Listen to Perspective";
+  };
+  
+  synth.speak(utterance);
+}
+
+function stopAudio() {
+  const btn = document.getElementById('speech-btn');
+  if (synth) {
+    synth.cancel();
+  }
+  btn.classList.remove('playing');
+  btn.innerHTML = "<span>🔊</span> Listen to Perspective";
+}
+
+// --- MAGNIFYING LENS RENDERING CORE ENGINE (MAINTAINED FROM SOURCE) ---
 const wrap    = document.getElementById('diagram-wrap');
 const inner   = document.getElementById('diagram-inner');
 const lens    = document.getElementById('lens');
@@ -237,30 +404,24 @@ const badge   = document.getElementById('zoom-badge');
 
 const LSIZE    = 220;
 const HALF     = LSIZE / 2;
-const MIN_Z    = 1; // lens zoom minimum
-const MAX_Z    = 8; // lens zoom maximum
-const SVG_PAD  = 150; // Plentiful padding so nothing clips at the borders
-
-let scale     = 2;
-let mouseX    = 0;
-let mouseY    = 0;
-let rafId     = null;
-let inside    = false;
-let svgImg    = null;
+let scale      = 2;
+let mouseX     = 0;
+let mouseY     = 0;
+let rafId      = null;
+let inside     = false;
+let svgImg     = null;
+const SVG_PAD  = 150;
 let badgeTimeout = null;
 
-function buildSvgImage(cb) {
+function buildSvgImage() {
   const svg = inner.querySelector('svg');
-  if (!svg) { setTimeout(() => buildSvgImage(cb), 200); return; }
+  if (!svg) { setTimeout(buildSvgImage, 200); return; }
 
-  // Use the native viewBox dimensions to establish the absolute internal coordinates
   const viewBox = svg.viewBox.baseVal;
   const svgWidth  = viewBox.width  || svg.getBoundingClientRect().width  || 800;
   const svgHeight = viewBox.height || svg.getBoundingClientRect().height || 600;
 
   const clone = svg.cloneNode(true);
-  
-  // Strip explicit styles that might interfere with custom sizing inside the image matrix
   clone.removeAttribute('style');
   
   const totalWidth  = svgWidth + (SVG_PAD * 2);
@@ -268,8 +429,6 @@ function buildSvgImage(cb) {
 
   clone.setAttribute('width',  totalWidth);
   clone.setAttribute('height', totalHeight);
-  
-  // Shift the viewport window to perfectly accommodate the padding injection
   clone.setAttribute('viewBox', `${viewBox.x - SVG_PAD} ${viewBox.y - SVG_PAD} ${totalWidth} ${totalHeight}`);
 
   const xml  = new XMLSerializer().serializeToString(clone);
@@ -282,61 +441,39 @@ function buildSvgImage(cb) {
     svgImg._w = svgWidth;
     svgImg._h = svgHeight;
     URL.revokeObjectURL(url);
-    if (cb) cb();
   };
   img.src = url;
 }
 
 function drawLens() {
   if (!svgImg || !inside) return;
-
   const svg = inner.querySelector('svg');
   if (!svg) return;
 
   const wRect = wrap.getBoundingClientRect();
-  const sRect = svg.getBoundingClientRect(); // Map to the SVG itself, ignoring parent container dead space
+  const sRect = svg.getBoundingClientRect();
 
-  // Position physical lens over the cursor
-  const lx      = mouseX - HALF;
-  const ly      = mouseY - HALF;
+  const lx = mouseX - HALF;
+  const ly = mouseY - HALF;
   lens.style.left = lx + 'px';
   lens.style.top  = ly + 'px';
 
-  // Calculate the ratio between the internal SVG coordinates and the actual rendered pixel width on screen
   const scaleX  = svgImg._w / sRect.width;
   const scaleY  = svgImg._h / sRect.height;
 
-  // Track cursor coordinates relative directly to the SVG bounds
   const relativeX = mouseX - (sRect.left - wRect.left);
   const relativeY = mouseY - (sRect.top  - wRect.top);
 
-  // Map position natively and center the viewport
   const srcX = (relativeX * scaleX) + SVG_PAD - (HALF / scale);
   const srcY = (relativeY * scaleY) + SVG_PAD - (HALF / scale);
 
-  const srcW = LSIZE / scale;
-  const srcH = LSIZE / scale;
-
   ctx.clearRect(0, 0, LSIZE, LSIZE);
-
   ctx.save();
   ctx.beginPath();
   ctx.arc(HALF, HALF, HALF, 0, Math.PI * 2);
   ctx.clip();
 
-  ctx.drawImage(
-    svgImg,
-    srcX, srcY,
-    srcW, srcH,
-    0, 0, LSIZE, LSIZE
-  );
-
-  // Crosshairs
-/*  ctx.strokeStyle = 'rgba(175,169,236,0.35)';
-  ctx.lineWidth = 0.5;
-  ctx.beginPath(); ctx.moveTo(HALF, 0); ctx.lineTo(HALF, LSIZE); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(0, HALF); ctx.lineTo(LSIZE, HALF); ctx.stroke();
-*/
+  ctx.drawImage(svgImg, srcX, srcY, LSIZE / scale, LSIZE / scale, 0, 0, LSIZE, LSIZE);
   ctx.restore();
 }
 
@@ -365,38 +502,20 @@ wrap.addEventListener('mousemove', function(e) {
   mouseY  = e.clientY - r.top;
 });
 
-/*
 wrap.addEventListener('wheel', function(e) {
+  if (e.buttons > 0) return; 
   e.preventDefault();
-  const delta = e.deltaY > 0 ? -0.25 : 0.25;
-  scale = Math.min(MAX_Z, Math.max(MIN_Z, scale + delta));
-
-  badge.textContent = scale.toFixed(1) + '×';
-  badge.style.display = 'block';
-  clearTimeout(badgeTimeout);
-  badgeTimeout = setTimeout(() => { badge.style.display = 'none'; }, 1200);
-}, { passive: false });
-*/
-  
-wrap.addEventListener('wheel', function(e) {
-  // If ANY mouse button is held down (e.buttons > 0), 
-  // do not zoom. Let the default page scrolling happen instead.
-  if (e.buttons > 0) {
-    return; 
-  }
-
-  // Otherwise, run your magnifier zoom logic
-  e.preventDefault();
-  const delta = e.deltaY > 0 ? -0.25 : 0.25;
-  scale = Math.min(MAX_Z, Math.max(MIN_Z, scale + delta));
-
+  scale = Math.min(8, Math.max(1, scale + (e.deltaY > 0 ? -0.25 : 0.25)));
   badge.textContent = scale.toFixed(1) + '×';
   badge.style.display = 'block';
   clearTimeout(badgeTimeout);
   badgeTimeout = setTimeout(() => { badge.style.display = 'none'; }, 1200);
 }, { passive: false });
 
-setTimeout(() => buildSvgImage(), 800);
+// INIT ON ENTRY LOOP
+window.addEventListener('DOMContentLoaded', () => {
+  switchPerspective('journey');
+});
 </script>
 </body>
 </html>
