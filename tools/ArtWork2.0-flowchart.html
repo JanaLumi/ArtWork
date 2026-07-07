@@ -25,6 +25,10 @@
     color: #2c2c2a;
     min-height: 100vh;
     padding: 2rem;
+
+    font-size: 16px; /* Increases default from squashed 12px/14px layouts */
+    line-height: 1.6; /* Prevents text lines from colliding */
+    letter-spacing: 0.02em;
   }
 
   header { margin-bottom: 1.5rem; }
@@ -62,7 +66,18 @@
   }
 
   /* --- AUDIO SLIDER CONTROLLER STYLES --- */
-  .audio-panel { display: flex; align-items: center; gap: 1rem; position: relative; }
+  .audio-panel {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    position: relative;
+  
+    font-size: 0.95rem; 
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+    display: block;
+  }
   
   .audio-modifiers {
     display: flex;
@@ -77,6 +92,13 @@
     display: flex;
     align-items: center;
     gap: 0.3rem;
+  }
+
+  /* VALUE READOUTS (The numbers next to the sliders) */
+  .slider-value-readout {
+    font-family: monospace;
+    font-size: 1.1rem; /* Sharp, high-contrast digital readouts */
+    font-weight: bold;
   }
 
   .audio-modifiers input[type="range"] {
@@ -279,6 +301,28 @@
     color: #888780;
     margin-top: 0.6rem;
   }
+
+  /* FORCE MULTI-LINE NODE WORD WRAPPING */
+  .mermaid g.node .label {
+    display: block !important;
+    max-width: 220px !important; /* Prevents nodes from getting too wide */
+    white-space: normal !important;
+    word-wrap: break-word !important;
+    text-align: center;
+  }
+
+  /* FLOWCHART LEGIBILITY LAYER */
+  .mermaid g.node text {
+    font-size: 14px !important; /* Forces clear typography inside the diagram nodes */
+    line-height: 1.4 !important;
+  }
+  
+  .perspective-description p {
+    font-size: 1.1rem; /* Keeps the accompanying descriptions highly legible */
+    max-width: 75ch; /* Prevents ultra-wide, exhausting line lengths */
+    margin-bottom: 1.2rem;
+  }
+  
 </style>
 </head>
 <body>
@@ -383,16 +427,16 @@ const perspectives = {
           F --> G[(static /data/manifest.json)]
       end
       subgraph Block_4 [4. The Interface Display]
-          G --> H[Fetch manifest array into client application state]
-          I1[User calibrates Planet-Centred slider] --> H
-          I2[User balances Ethical equity slider] --> H
-          I3[Dials register Aesthetic Entropy & Colour Waves] --> H
-          I4[User adjusts Financial Speculation dial] --> H
+          G --> H[Fetch manifest array into <br> client application state]
+          I1[User calibrates <br> Planet-Centred slider] --> H
+          I2[User balances <br> Ethical equity slider] --> H
+          I3[User adjusts <br> Financial Speculation dial] --> H
+          I4[Dials register Aesthetic Entropy <br> & Colour Waves] --> H
       end
       subgraph Block_5 [5. The Balance Check]
-          H --> J{Evaluate Multi-Axis Equilibrium}
-          J -->|Speculation > Planet + Ethical + Colour Constraints| K[State: ASYMMETRY LOCKOUT <br> Halt Viewport Grid Render]
-          J -->|All Balanced Constraints Passed| L[Illuminate Verified Variant on Grid]
+          H --> J{Evaluate Multi-Axis <br> Equilibrium}
+          J -->|Speculation > Planet + <br> Ethical + Colour Constraints| K[State: ASYMMETRY LOCKOUT <br> Halt Viewport Grid Render]
+          J -->|All Balanced <br> Constraints Passed| L[Illuminate Verified <br> Variant on Grid]
       end
       class A,C,I1,I2,I3,I4 trigger; class B,D,D1,D2,D3,H,J,L system; class F,G database; class K gate;`
   },
@@ -423,9 +467,9 @@ const perspectives = {
       subgraph P4 [4. The Interface Display]
           C2 ---> D1[Client Application Memory State]
           subgraph D2 [Tactile Control Enclosure]
-              D2a(Financial Speculation Dial)
-              D2b(Planet-Centred Slider)
-              D2c(Ethical Equity Slider)
+              D2a(Planet-Centred <br> Slider)
+              D2b(Ethical Equity <br> Slider)
+              D2c(Financial Speculation <br> Dial)
               D2d(Aesthetic Entropy Display)
               D2e(Colour Temperature Wave Meters)
           end
@@ -433,9 +477,9 @@ const perspectives = {
       end
 
       subgraph P5 [5. The Balance Check]
-          D1 ---> E1{Equilibrium Interlock Loop}
-          E1 --->|Speculation Over-Extraction| E2[Asymmetry Lockout: Halt Processing]
-          E1 --->|Verified Balance Compliance| E3[Render Filtered Viewport Grid Matrix]
+          D1 ---> E1{Equilibrium <br> Interlock Loop}
+          E1 --->|Speculation <br> Over-Extraction| E2[Asymmetry Lockout: Halt Processing]
+          E1 --->|Verified Balance <br> Limits| E3[Render Filtered Viewport Grid Matrix]
       end`
   }
 };
