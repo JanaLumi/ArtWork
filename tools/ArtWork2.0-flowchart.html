@@ -406,13 +406,13 @@
 const perspectives = {
   journey: {
     title: "System Journey — Tracing the Data Flow",
-    file: "diagrams/system-journey.md",
+    file: "../diagrams/system-journey.md",
     text: `<p>This perspective tracks how data travels through the console modules, starting simultaneously with human archival records and automated digital scans.</p>
            <p>First, physical reality is logged in the spreadsheet while a background scan calculates mathematical parameters like Aesthetic Entropy and Colour Temperature Waves.</p>`
   },
   overview: {
     title: "System Overview — Structural Architecture",
-    file: "diagrams/system-overview.md",
+    file: "../diagrams/system-overview.md",
     text: `<p>This layout outlines the five functional blocks comprising the complete console ecosystem. It visualizes how separate input panels evaluate physical material truth against automated digital metrics independently.</p>`
   }
 };
@@ -738,7 +738,7 @@ wrap.addEventListener('wheel', function(e) {
 }, { passive: false });
 
 window.addEventListener('DOMContentLoaded', () => {
-  switchPerspective('journey');
+  switchPerspective('journey', null);
 });
 </script>
 </body>
