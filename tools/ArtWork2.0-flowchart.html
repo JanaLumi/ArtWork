@@ -530,6 +530,8 @@ async function switchPerspective(key, evt) {
     console.error("Could not fetch the decoupled diagram file:", error);
     document.getElementById("mermaid-target").textContent = "Error reading perspective database file.";
   }
+
+}
 // COMPUTE INITIAL OR MID-SENTENCE UTTERANCE
 function playSpeechFromOffset(textToSpeak, characterOffset = 0) {
   if (synth) {
