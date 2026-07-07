@@ -411,7 +411,7 @@
 // Metadata config for descriptions and file pathways
 const perspectives = {
   journey: {
-    title: "System Journey — Tracing the Data Flow",
+    title: "System Journey — The Story of the System",
     file: "../diagrams/system-journey.md",
     text: `<p>This perspective traces the active lifecycle of a process as it travels through the environment, beginning with raw material configurations or primary inputs.</p>
            <p>It illuminates how these states transform as they pass through various operational zones, establishing a transparent, step-by-step narrative of the system's internal current.</p>`
@@ -487,43 +487,49 @@ async function switchPerspective(key, evt) {
   document.getElementById("perspective-text").innerHTML = view.text;
 
   try {
-    // Read the standalone plain .md text file
+    // 1. Fetch the standalone plain .md text file
     const response = await fetch(view.file);
-    let code = await response.text();
+    const wholeFileText = await response.text();
 
-    // Clean out typical markdown code fences if editing left them behind
-    code = code.replace(/```mermaid/g, "").replace(/```/g, "").trim();
+    // 2. Split the file using our narrative comment divider
+    const parts = wholeFileText.split("");
+    
+    // 3. Part 1 is the Mermaid flowchart graph script layout
+    let code = parts[0].trim();
 
-    // Re-inject container code block for Mermaid's layout scanner
+    // 4. Part 2 is the actual system story narrative text strings
+    if (parts[1] && parts[1].trim()) {
+      document.getElementById("perspective-text").innerHTML = parts[1].trim();
+    } else {
+      document.getElementById("perspective-text").innerHTML = view.text;
+    }
+
+    // 5. Re-inject container code block for Mermaid's layout scanner
     const outputTarget = document.getElementById("mermaid-target");
     outputTarget.removeAttribute("data-processed");
     outputTarget.textContent = code;
 
-    // Trigger local Mermaid layout rebuild
+    // 6. Trigger local Mermaid layout rebuild
     mermaid.run({ nodes: [outputTarget] });
 
     // Manage active button visual highlights safely
     document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
     
-    // Fallback block if invocation occurs on load without interaction events
     if (evt && evt.currentTarget) {
       evt.currentTarget.classList.add('active');
     } else {
-      // Automatic fallback selection matching on application initialization states
       const targetText = key === 'journey' ? 'SYSTEM JOURNEY' : 'SYSTEM OVERVIEW';
       document.querySelectorAll('.tab-btn').forEach(btn => {
         if (btn.textContent.trim() === targetText) btn.classList.add('active');
       });
     }
 
-    // Force magnification lens recalculations to update image caches smoothly
     setTimeout(buildSvgImage, 350);
 
   } catch (error) {
     console.error("Could not fetch the decoupled diagram file:", error);
     document.getElementById("mermaid-target").textContent = "Error reading perspective database file.";
   }
-}
 // COMPUTE INITIAL OR MID-SENTENCE UTTERANCE
 function playSpeechFromOffset(textToSpeak, characterOffset = 0) {
   if (synth) {
