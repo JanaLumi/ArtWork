@@ -360,7 +360,7 @@ const perspectives = {
   journey: {
     title: "System Journey — Tracing the Data Flow",
     text: `<p>This perspective tracks how data travels through the console modules, starting simultaneously with human archival records and automated digital scans.</p>
-           <p>First, physical reality is logged in the spreadsheet while a background scan calculates mathematical parameters like Aesthetic Entropy and Color Temperature Waves. Second, the Data Merger collapses these parallel streams into a single database file. Finally, when loaded into the Interface Display, the system routes the inputs through a Balance Check. If the Financial Speculation dial scales higher than the Planet-Centred or Ethical limits of the piece, the layout enters an Asymmetry Lockout, halting the display until equilibrium is restored.</p>`,
+           <p>First, physical reality is logged in the spreadsheet while a background scan calculates mathematical parameters like Aesthetic Entropy and Colour Temperature Waves. Second, the Data Merger collapses these parallel streams into a single database file. Finally, when loaded into the Interface Display, the system routes the inputs through a Balance Check. If the Financial Speculation dial scales higher than the Planet-Centred or Ethical limits of the piece, the layout enters an Asymmetry Lockout, halting the display until equilibrium is restored.</p>`,
     code: `flowchart TD
       %%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#EEEDFE', 'primaryBorderColor': '#534AB7', 'primaryTextColor': '#26215C', 'lineColor': '#888780', 'secondaryColor': '#E1F5EE', 'fontSize': '13px'}}}%%
       classDef trigger fill:#fff3e0,stroke:#ff9800,stroke-width:2px,color:#e65100;
@@ -369,12 +369,12 @@ const perspectives = {
       classDef gate fill:#ffcdd2,stroke:#c62828,stroke-width:2px,color:#b71c1c;
 
       subgraph Block_1 [1. The Physical Log]
-          A[Archivist logs parameters into /archive/matrix.csv] --> B[Capture Sourcing Material Keys & Labor Splits]
+          A[Archivist logs parameters into /archive/matrix.csv] --> B[Capture Sourcing Material Keys & Labour Splits]
       end
       subgraph Block_2 [2. The Digital File Scan]
-          C[Master image added to /archive/masters/] --> D[watch.py triggers local analysis]
+          C[Image files added to folder] --> D[watch.py triggers local analysis]
           D --> D1[OpenCV calculates Laplacian Edge Variance <br> Aesthetic Entropy]
-          D --> D2[NumPy computes Wavelength Histograms <br> Color Temperature Waves]
+          D --> D2[NumPy computes Wavelength Histograms <br> Colour Temperature Waves]
           D --> D3[Ollama running Llava Local Vision Model <br> Visual Style Tags]
       end
       subgraph Block_3 [3. The Data Merger]
@@ -396,13 +396,13 @@ const perspectives = {
   overview: {
     title: "System Overview — Structural Architecture",
     text: `<p>This layout outlines the five functional blocks comprising the complete console ecosystem. It visualizes how separate input panels evaluate physical material truth against automated digital metrics before client-side rendering.</p>
-           <p>Block 1 and Block 2 operate as parallel intakes, capturing the Planet-Centred/Ethical data and the mathematical properties (Aesthetic Entropy, Color Temperature Waves) independently. Block 3 acts as the translation layer where these inputs combine into an indexable data block. Block 4 and Block 5 handle the live interface layout and enforcement loops, checking database variables against your balance rules before mapping visual data to the viewport grid.</p>`,
+           <p>Block 1 and Block 2 operate as parallel intakes, capturing the Planet-Centred/Ethical data and the mathematical properties (Aesthetic Entropy, Colour Temperature Waves) independently. Block 3 acts as the translation layer where these inputs combine into an indexable data block. Block 4 and Block 5 handle the live interface layout and enforcement loops, checking database variables against your balance rules before mapping visual data to the viewport grid.</p>`,
     code: `flowchart TD
       %%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#EEEDFE', 'primaryBorderColor': '#534AB7', 'primaryTextColor': '#26215C', 'lineColor': '#888780', 'secondaryColor': '#E1F5EE', 'fontSize': '13px'}}}%%
       
       subgraph P1 [1. The Physical Log]
           A1[\`/archive/matrix.csv\`] ---> A2[Sourcing Origin Audit]
-          A1 ---> A3[Labor & Split Registry]
+          A1 ---> A3[Labour & Split Registry]
       end
 
       subgraph P2 [2. The Digital File Scan]
@@ -428,7 +428,7 @@ const perspectives = {
           E1 --->|Verified Balance Compliance| E3[Render Filtered Viewport Grid Matrix]
       end`
   }
-};
+};  
 
 // GLOBAL STATES
 let currentPerspective = 'journey';
