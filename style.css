@@ -580,7 +580,7 @@ textarea {
 .ireland-stat .figure {
   font-family: var(--font-mono);
   font-size: 2rem;
-  color: var(--paper);
+  color: var(--theme-mid);
   margin-bottom: 0.25rem;
 }
 
@@ -597,7 +597,7 @@ textarea {
 }
 
 #artwork-programme .btn-ink {
-  color: var(--paper);
+  color: var(--theme-text);
   border-color: rgba(255,255,255,0.5);
 }
 
