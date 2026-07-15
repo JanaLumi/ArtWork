@@ -302,10 +302,10 @@ input[type="number"]:focus,
 select:focus,
 textarea:focus {
   border-color: var(--umber);
-  color: var(--theme-text);
+  color: var(--theme-mid); /* var(--theme-text); */
 }
 
-select option { background: var(--theme-mid); } /* background of option dropdown */
+select option { background: var(--theme-accent); } /* background of option dropdown */
 
 .checkbox-group {
   display: flex;
