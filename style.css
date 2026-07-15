@@ -305,7 +305,7 @@ textarea:focus {
   color: var(--theme-text);
 }
 
-select option { background: var(color: var(--theme-mid)); } /* background of option dropdown */
+select option { background: var(--theme-mid); } /* background of option dropdown */
 
 .checkbox-group {
   display: flex;
