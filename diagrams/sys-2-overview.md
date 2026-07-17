@@ -16,53 +16,55 @@ code: `flowchart TD
   classDef terminal fill:#888780,stroke:#5F5E5A,color:#F1EFE8
   classDef datalayer fill:#F1EFE8,stroke:#888780,color:#2c2c2a
 
-  subgraph ARTIST ["👩🏽‍🎨 Artist Journey"]
+  subgraph A ["👩🏽‍🎨 Phase 1 — Artist Ingestion"]
     A1(["artwork enters the system"])
     A1 --> A2{"batch or single?"}
     A2 -->|"batch"| A3["folder + CSV"]
     A2 -->|"single"| A4["one piece"]
-    A3 & A4 --> A5["machine ingests\ncomplexity · colour · no network"]
-    A5 --> A6{"opt in to\nAI per field?"}
-    A6 -->|"yes"| A7["AI suggests\ntitle · tags · price"]
-    A7 --> A8["artist reviews\naccept · edit · reject"]
-    A6 -->|"no"| A9["artist fills\nall fields"]
-    A8 & A9 --> A10["artist enters material truth\nmedium · sourcing · location · gallery split"]
-    A10 --> A11["machine compiles to JSON\nlocal · static · yours"]
-    A11 --> A12["AI generates\nplanetary threshold profile"]
-    A12 --> A13["artist adds link\nto own site"]
+    A3 & A4 --> A5["machine reads each image\ncomplexity · colour · no network"]
   end
 
-  subgraph DATALAYER ["⚙️ Shared Data Layer"]
-    D1[("structured JSON\nplanetary threshold profile\nartist site link")]
+  subgraph B ["🎚️ Phase 2 — AI Assistance (opt-in)"]
+    A5 --> B1{"opt in to\nAI per field?"}
+    B1 -->|"yes"| B2["AI suggests\ntitle · tags · price"]
+    B2 --> B3["artist reviews\naccept · edit · reject"]
+    B1 -->|"no"| B4["artist fills\nall fields"]
+    B3 & B4 --> B5["artist enters material truth\nmedium · sourcing · location · gallery split\nonly artist can do this"]
   end
 
-  subgraph BUYER ["🛒 Buyer Journey"]
-    B1(["buyer enters discovery interface"])
-    B1 --> B2["buyer sets space context\nlight · colours · wall size"]
-    B2 --> B3["machine filters catalogue\nagainst space parameters"]
-    B3 --> B4{"browse or\ngo deeper?"}
-    B4 -->|"browse"| B5["works appear\nmove through the grid"]
-    B4 -->|"pause"| B6["lighting simulation\nmaterial record · artist info"]
-    B5 & B6 --> B7{"factor in\nfinancial value?"}
-    B7 -->|"no"| B8["AI shows planetary threshold\nshipping · materials · studio practices"]
-    B7 -->|"yes"| B9["raise speculation filter\nplanetary threshold rises with it"]
-    B9 --> B8
-    B8 --> B10["buyer sees trade-offs\nnot a verdict · a position"]
-    B10 --> B11{"right work\nfound?"}
-    B11 -->|"no"| B4
-    B11 -->|"yes"| B12["platform points to artist's site\ntransaction on artist's terms"]
-    B12 --> B13(["buyer and artist connect directly"])
+  subgraph C ["⚙️ Phase 3 — Serialisation"]
+    B5 --> C1["machine compiles to JSON\nlocal · static · yours"]
+    C1 --> C2["AI generates planetary threshold profile\nmultivariate · trade-offs visible · not a verdict"]
+    C2 --> C3["artist adds link to own site"]
+    C3 --> C4[("shared data layer\nJSON · threshold profile · artist site link")]
   end
 
-  A13 --> D1
-  D1 --> B3
-  D1 --> B8
+  subgraph D ["🛒 Phase 4 — Buyer Discovery"]
+    C4 --> D1(["buyer enters discovery interface"])
+    D1 --> D2["buyer sets space context\nlight · colours · wall size"]
+    D2 --> D3["machine filters catalogue\nagainst space parameters"]
+    D3 --> D4{"browse or\ngo deeper?"}
+    D4 -->|"browse"| D5["works appear\nmove through the grid"]
+    D4 -->|"pause"| D6["lighting simulation\nmaterial record · artist info"]
+  end
 
-  class A1,B1,B13 terminal
-  class A2,A6,B4,B7,B11 decision
-  class A5,A11,A13,B3,B5,B6,B12 machine
-  class A7,A12,B8,B9 ai
-  class A3,A4,A8,A9,A10 artist
-  class B2,B10 buyer
-  class D1 datalayer`
+  subgraph E ["🌍 Phase 5 — Planetary Threshold & Referral"]
+    D5 & D6 --> E1{"factor in\nfinancial value?"}
+    E1 -->|"no"| E2["AI shows planetary threshold\nshipping · materials · studio practices"]
+    E1 -->|"yes"| E3["raise speculation filter\nplanetary threshold rises with it\ncannot be separated"]
+    E3 --> E2
+    E2 --> E4["buyer sees trade-offs\nnot a verdict · a position\nbuyer decides what to carry"]
+    E4 --> E5{"right work\nfound?"}
+    E5 -->|"no"| D4
+    E5 -->|"yes"| E6["platform points to artist's own site\ntransaction on artist's terms"]
+    E6 --> E7(["buyer and artist connect directly"])
+  end
+
+  class A1,D1,E7 terminal
+  class A2,B1,D4,E1,E5 decision
+  class A5,C1,C3,D3,D5,D6,E6 machine
+  class B2,C2,E2,E3 ai
+  class A3,A4,B3,B4,B5 artist
+  class D2,E4 buyer
+  class C4 datalayer`
 
