@@ -5,8 +5,8 @@ Then the AI becomes available — if you want it. Not before. You decide, field 
        <p>Then comes the part only you can do.</p>
        <p>You enter the material truth of the piece. What it's made of. Where those materials came from. Where the work currently is. What the gallery takes. This is not data entry. This is the record of choices you made before anyone else saw the work. The machine waited for this. The AI could not infer it. It exists in the system because you put it there.
 The machine compiles everything into a single structured file: Local - Static - Yours.</p>
-       <p>Now the AI reads your piece against the Planetary Threshold — not to judge it, but to map where it sits. Shipping distance against material source. Commercial weight against ecological cost. The tensions are made visible, not resolved. This profile doesn't belong to you alone — it becomes part of what a seeker sees when they find your work.</p>
-       <p>You add the link to your own site. That's where everything else happens — purchases, prints, conversations, patronage. The platform points. You receive. Your work enters the catalogue. A seeker can now find it.</p>`,
+       <p>Now the AI reads your piece against the Planetary Threshold — not to judge it, but to map where it sits. Shipping distance against material source. Commercial weight against ecological cost. The tensions are made visible, not resolved. This profile doesn't belong to you alone — it becomes part of what a buyer sees when they find your work.</p>
+       <p>You add the link to your own site. That's where everything else happens — purchases, prints, conversations, patronage. The platform points. You receive. Your work enters the catalogue. A buyer can now find it.</p>`,
 code: `flowchart TD
   %%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#EEEDFE', 'primaryBorderColor': '#534AB7', 'primaryTextColor': '#26215C', 'lineColor': '#888780', 'secondaryColor': '#E1F5EE', 'fontSize': '13px'}}}%%
   classDef trigger fill:#EF9F27,stroke:#b87000,color:#fff
