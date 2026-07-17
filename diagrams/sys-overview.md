@@ -1,0 +1,8 @@
+**System Overview — the architecture**
+The system moves in one direction: from your studio into the browser, through a layer of made-visible tensions, and out to a person looking for something real.
+Phase one never touches the internet. Local file scan, local ingestion script — all processing on your own hardware. What comes out is a set of measurements: complexity, colour ratios, descriptive tags. The machine appended them. No judgment was made.
+Phase two is a choice. The AI is available to suggest fields — title, description, dominant colours, price. You opt in per field, or not at all. Default is your own words. The AI waits to be invited.
+Phase three is yours entirely. Material truth: what the piece is made of, where those materials came from, the shipping distance, the financial split. The machine waited. The AI couldn't do this. You enter it, or it doesn't exist.
+Phase four compiles both streams — first into a spreadsheet you can read and edit by hand, then into a structured JSON file the browser loads. No server. No database you don't control.
+Phase five is the interface: a discovery dashboard where light, context, colour relationships, and decision pacing let someone explore without being pushed toward a sale. Alongside it, the Planetary Threshold — a multivariate field where the ecological and ethical tensions in each piece are made visible. Not a gate. Not a verdict. A boundary object: something artists, buyers, ecologists, and companies can each read from their own position, without needing to agree on what it means.
+You see the trade-offs. You decide. The machine surfaces what you choose to make findable.
