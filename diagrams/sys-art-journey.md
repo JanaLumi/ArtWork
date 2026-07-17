@@ -1,4 +1,4 @@
-title: "Artist Journey — the story of what happens",
+title: "Artist's Journey — the story of what happens",
 text: `<p>You have work to add to the catalogue. Maybe a whole body of work ready to go at once, maybe just one piece you want to place carefully. You choose how to enter — a batch of images with a spreadsheet, or a single piece on its own. Either way, nothing leaves your machine.</p>
        <p>The machine wakes up. It reads each image without judgment — measuring complexity, mapping colour, appending a clean line to your spreadsheet. Fast, automatic, no network call.
 Then the AI becomes available — if you want it. Not before. You decide, field by field, what you'd like it to suggest. A title. Descriptive tags. A price indication based on comparable work. You look at what it offers. Take what's useful, edit what isn't, ignore it entirely if you prefer. The AI is another presence, not an authority.</p>
