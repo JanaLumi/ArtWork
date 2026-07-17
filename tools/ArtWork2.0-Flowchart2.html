@@ -532,7 +532,7 @@ async function switchPerspective(key, evt) {
   if (evt && evt.currentTarget) {
     evt.currentTarget.classList.add('active');
   } else {
-    const targetText = key === 'journey' ? 'ARTIST JOURNEY' : 'BUYER JOURNEY' : 'SYSTEM OVERVIEW';
+    const targetText = key === 'journey' ? 'ARTIST JOURNEY' : key === 'journey2' ? 'BUYER JOURNEY' : 'SYSTEM OVERVIEW';
     document.querySelectorAll('.tab-btn').forEach(btn => {
       if (btn.textContent.trim() === targetText) btn.classList.add('active');
     });
