@@ -115,15 +115,18 @@ nav {
   z-index: 100;
   background: var(--theme-bg);
   border-bottom: 1px solid var(--theme-border);
-  padding-block: 1rem;
+  padding-block: 0.75rem 0;
   transition: background 1.4s ease, border-color 0.8s ease;
 }
 
-.nav-inner {
+/* Row 1: logo · nav links · language · toggle */
+.nav-row-1 {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   gap: 1rem;
+  padding-bottom: 0.5rem;
+  width: min(var(--max), 100% - 3rem);
+  margin-inline: auto;
 }
 
 .nav-logo {
@@ -132,12 +135,14 @@ nav {
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--theme-line-primary);
+  flex-shrink: 0;
 }
 
 .nav-links {
   display: flex;
   gap: 2rem;
   list-style: none;
+  flex: 1;
 }
 
 .nav-links a {
@@ -145,10 +150,73 @@ nav {
   font-size: 0.75rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--ink);
+  color: var(--theme-line-primary);
 }
 
 .nav-links a:hover { color: var(--umber); text-decoration: none; }
+
+/* Row 2: atmosphere label + city input, right-aligned */
+.nav-row-2 {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  padding-bottom: 0.5rem;
+  width: min(var(--max), 100% - 3rem);
+  margin-inline: auto;
+  min-height: 1.8rem;
+}
+
+/* Mobile accordion toggle */
+.nav-mobile-toggle {
+  display: none;
+  background: none;
+  border: 1px solid rgba(255,255,255,0.2);
+  color: var(--theme-line-primary);
+  font-size: 0.7rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--radius);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.nav-collapsible {
+  display: contents;
+}
+
+/* Mobile styles */
+@media (max-width: 680px) {
+  .nav-mobile-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+  }
+
+  .nav-collapsible {
+    display: none;
+    width: 100%;
+  }
+
+  .nav-collapsible.open {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding-block: 0.5rem;
+  }
+
+  .nav-links {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .nav-row-1 {
+    flex-wrap: wrap;
+  }
+
+  .nav-row-2 {
+    justify-content: flex-start;
+  }
+}
 
 /* ── Hero ── */
 #hero {
