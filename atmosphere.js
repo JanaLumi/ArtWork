@@ -211,20 +211,22 @@ function renderCityDropdown(results, dropdown, input) {
 /* ── Weather fetch ── */
 async function fetchAndApplyWeather(lat, lon) {
   try {
-    const url  = `${WEATHER_API}?latitude=${lat}&longitude=${lon}&current=weather_code,temperature_2m,cloud_cover,wind_speed_10m,precipitation&timezone=auto`;
+    const url  = `${WEATHER_API}?latitude=${lat}&longitude=${lon}&current=weather_code,temperature_2m,cloud_cover,wind_speed_10m,precipitation&daily=sunrise,sunset&timezone=auto`;
     const res  = await fetch(url);
     const data = await res.json();
-    const c    = data.current;
-    applyWeatherMood(c.weather_code, c.cloud_cover, c.temperature_2m, c.wind_speed_10m, c.precipitation);
+    const c  = data.current;
+    const sr = data.daily?.sunrise?.[0] || null;
+    const ss = data.daily?.sunset?.[0]  || null;
+    applyWeatherMood(c.weather_code, c.cloud_cover, c.temperature_2m, c.wind_speed_10m, c.precipitation, sr, ss);
   } catch { applySpaceMood(); }
 }
 
-function applyWeatherMood(code, cloud, temp, wind, precip) {
-  const hour    = new Date().getHours();
-  const isNight = hour < 6 || hour >= 20;
-
-  // Determine base mood from time of day
-  const baseMood = isNight ? getNightTod(hour) : getDayTod(hour);
+function applyWeatherMood(code, cloud, temp, wind, precip, sunriseISO, sunsetISO) {
+  const hour     = new Date().getHours();
+  const baseMood = (sunriseISO && sunsetISO)
+    ? getSolarTod(sunriseISO, sunsetISO)
+    : (hour < 6 || hour >= 20 ? getNightTod(hour) : getDayTod(hour));
+  const isNight  = ['deep_night','evening','blue_hour','dusk','dawn'].includes(baseMood);
 
   // Determine weather modifier key
   let modKey = 'clear';
@@ -416,6 +418,32 @@ function isSupermoon(date) {
   return anomaly < 3 || anomaly > 24.5; // near perigee
 }
 
+/* ── Solar-proportional time of day ── */
+function getSolarTod(sunriseISO, sunsetISO) {
+  const now     = new Date();
+  const sunrise = new Date(sunriseISO);
+  const sunset  = new Date(sunsetISO);
+  const noon    = new Date((sunrise.getTime() + sunset.getTime()) / 2);
+
+  const t  = now.getTime();
+  const ri = sunrise.getTime();
+  const si = sunset.getTime();
+  const ni = noon.getTime();
+
+  // Polar night
+  if (si <= ri) return 'deep_night';
+
+  if (t < ri - 60 * 60 * 1000)                        return 'deep_night';
+  if (t < ri + 60 * 60 * 1000)                        return 'dawn';
+  if (t < ri + (ni - ri) * 0.4)                       return 'morning';
+  if (t < ri + (ni - ri) * 0.6 + (si - ni) * 0.6)    return 'midday';
+  if (t < si - 90  * 60 * 1000)                       return 'afternoon';
+  if (t < si + 120 * 60 * 1000)                       return 'dusk';
+  if (t < si + 180 * 60 * 1000)                       return 'blue_hour';
+  if (t < si + 300 * 60 * 1000)                       return 'evening';
+  return 'deep_night';
+}
+
 /* ── Time of day ── */
 function getNightTod(hour) {
   if (hour >= 4  && hour < 6)  return 'dawn';
@@ -430,6 +458,18 @@ function getDayTod(hour) {
   if (hour >= 13 && hour < 17) return 'afternoon';
   if (hour >= 17 && hour < 19) return 'dusk';
   return 'deep_night';
+}
+
+/* ── Colour interpolation ── */
+function interpolateHex(hex1, hex2, t) {
+  const parse = h => [0,2,4].map(i => parseInt((h||'888888').slice(i,i+2), 16));
+  const [r1,g1,b1] = parse(hex1);
+  const [r2,g2,b2] = parse(hex2);
+  return [
+    Math.round(r1 + (r2-r1)*t),
+    Math.round(g1 + (g2-g1)*t),
+    Math.round(b1 + (b2-b1)*t)
+  ].map(v => v.toString(16).padStart(2,'0')).join('');
 }
 
 /* ── Luminance ── */
