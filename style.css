@@ -1330,7 +1330,7 @@ footer {
 .nav-links-mobile {
   list-style: none;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: 0.6rem;
 }
 
