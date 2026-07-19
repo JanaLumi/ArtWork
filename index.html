@@ -9,21 +9,21 @@
 </head>
 <body>
 
-  <!-- ── Navigation ── -->
+<!-- ── Navigation ── -->
   <nav aria-label="Päänavigaatio">
 
     <!-- Row 1 -->
     <div class="nav-row-1">
       <span class="nav-logo">Art@Work</span>
 
-      <!-- Nav links — hidden in mobile accordion -->
-      <ul class="nav-links" id="nav-links">
+      <!-- Desktop: nav links -->
+      <ul class="nav-links">
         <li><a href="#search">Etsi taidetta</a></li>
         <li><a href="#artwork-programme">Ohjelma</a></li>
         <li><a href="#about">Tietoa</a></li>
       </ul>
 
-      <!-- Right side controls -->
+      <!-- Desktop: language · [city input + toggle] -->
       <div class="nav-right">
         <div class="lang-switcher mono">
           <button class="lang-btn active" data-lang="fi">FI</button>
@@ -50,7 +50,7 @@
         </div>
       </div>
 
-      <!-- Mobile accordion trigger — CSS shows this only on mobile -->
+      <!-- Mobile only: accordion trigger -->
       <button class="nav-mobile-toggle" id="nav-mobile-toggle"
         aria-expanded="false" aria-controls="nav-collapsible"
         aria-label="Avaa valikko">
@@ -58,7 +58,7 @@
       </button>
     </div>
 
-    <!-- Mobile accordion panel — contains nav links + controls -->
+    <!-- Mobile accordion panel: nav links + language + toggle + city -->
     <div class="nav-collapsible" id="nav-collapsible" aria-hidden="true">
       <ul class="nav-links-mobile">
         <li><a href="#search">Etsi taidetta</a></li>
@@ -71,29 +71,32 @@
           <button class="lang-btn" data-lang="en">EN</button>
           <button class="lang-btn" data-lang="sv">SV</button>
         </div>
-        <div class="atmosphere-control">
-          <span class="atm-icon" aria-hidden="true">🌌</span>
-          <label class="toggle-switch">
-            <input type="checkbox" id="atmosphere-toggle-mob" role="switch" aria-label="Ota sää käyttöön">
-            <span class="toggle-track"><span class="toggle-thumb"></span></span>
-          </label>
-          <span class="atm-icon" aria-hidden="true">⛅</span>
+        <div class="nav-weather-group">
+          <div id="city-input-section-mob" style="display:none;" class="city-section">
+            <div class="city-wrap">
+              <input type="text" id="city-input-mob" placeholder="Kaupunki..." autocomplete="off" aria-label="Kirjoita kaupunki">
+              <div id="city-dropdown-mob" class="city-dropdown" role="listbox"></div>
+            </div>
+          </div>
+          <div class="atmosphere-control">
+            <span class="atm-icon" aria-hidden="true">🌌</span>
+            <label class="toggle-switch">
+              <input type="checkbox" id="atmosphere-toggle-mob" role="switch" aria-label="Ota sää käyttöön">
+              <span class="toggle-track"><span class="toggle-thumb"></span></span>
+            </label>
+            <span class="atm-icon" aria-hidden="true">⛅</span>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- Row 2: atmosphere label + city input, always visible, scrollable on mobile -->
+    <!-- Row 2: atmosphere label, always visible, scrollable on mobile -->
     <div class="nav-row-2">
       <span class="atmosphere-label mono" id="atmosphere-label"></span>
-      <div id="city-input-section-r2" style="display:none;" class="city-section">
-        <div class="city-wrap">
-          <input type="text" id="city-input-r2" placeholder="Kaupunki..." autocomplete="off" aria-label="Kirjoita kaupunki">
-          <div id="city-dropdown-r2" class="city-dropdown" role="listbox"></div>
-        </div>
-      </div>
     </div>
 
   </nav>
+  
   <!-- ── Hero ── -->
   <section id="hero">
     <div class="container">
