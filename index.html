@@ -12,33 +12,24 @@
   <!-- ── Navigation ── -->
   <nav aria-label="Päänavigaatio">
 
-    <!-- Row 1: logo · [mobile toggle] · [nav links] · language · atmosphere toggle -->
+    <!-- Row 1 -->
     <div class="nav-row-1">
       <span class="nav-logo">Art@Work</span>
 
-      <!-- Mobile accordion trigger — hidden on desktop -->
-      <button class="nav-mobile-toggle" id="nav-mobile-toggle" aria-expanded="false" aria-controls="nav-collapsible">
-        <span class="nav-mobile-arrow" id="nav-mobile-arrow">▾</span>
-      </button>
+      <!-- Nav links — hidden in mobile accordion -->
+      <ul class="nav-links" id="nav-links">
+        <li><a href="#search">Etsi taidetta</a></li>
+        <li><a href="#artwork-programme">Ohjelma</a></li>
+        <li><a href="#about">Tietoa</a></li>
+      </ul>
 
-      <!-- Collapsible: nav links — visible on desktop, accordion on mobile -->
-      <div class="nav-collapsible" id="nav-collapsible">
-        <ul class="nav-links">
-          <li><a href="#search">Etsi taidetta</a></li>
-          <li><a href="#artwork-programme">Ohjelma</a></li>
-          <li><a href="#about">Tietoa</a></li>
-        </ul>
-      </div>
-
-      <!-- Always visible on right: language switcher + atmosphere toggle -->
+      <!-- Right side controls -->
       <div class="nav-right">
-        <!-- Language switcher -->
         <div class="lang-switcher mono">
           <button class="lang-btn active" data-lang="fi">FI</button>
           <button class="lang-btn" data-lang="en">EN</button>
           <button class="lang-btn" data-lang="sv">SV</button>
         </div>
-        
         <div class="nav-weather-group">
           <div id="city-input-section" style="display:none;" class="city-section">
             <div class="city-wrap">
@@ -46,8 +37,6 @@
               <div id="city-dropdown" class="city-dropdown" role="listbox" aria-label="Kaupunkiehdotukset"></div>
             </div>
           </div>
-
-          <!-- Atmosphere toggle -->
           <div class="atmosphere-control" title="Vaihda tilaan/säähän">
             <span class="atm-icon" aria-hidden="true">🌌</span>
             <label class="toggle-switch">
@@ -60,15 +49,51 @@
           </div>
         </div>
       </div>
+
+      <!-- Mobile accordion trigger — CSS shows this only on mobile -->
+      <button class="nav-mobile-toggle" id="nav-mobile-toggle"
+        aria-expanded="false" aria-controls="nav-collapsible"
+        aria-label="Avaa valikko">
+        <span class="nav-mobile-arrow">▾</span>
+      </button>
     </div>
 
-    <!-- Row 2: atmosphere label (left) + city input (right, shown when weather active) -->
+    <!-- Mobile accordion panel — contains nav links + controls -->
+    <div class="nav-collapsible" id="nav-collapsible" aria-hidden="true">
+      <ul class="nav-links-mobile">
+        <li><a href="#search">Etsi taidetta</a></li>
+        <li><a href="#artwork-programme">Ohjelma</a></li>
+        <li><a href="#about">Tietoa</a></li>
+      </ul>
+      <div class="nav-controls-mobile">
+        <div class="lang-switcher mono">
+          <button class="lang-btn" data-lang="fi">FI</button>
+          <button class="lang-btn" data-lang="en">EN</button>
+          <button class="lang-btn" data-lang="sv">SV</button>
+        </div>
+        <div class="atmosphere-control">
+          <span class="atm-icon" aria-hidden="true">🌌</span>
+          <label class="toggle-switch">
+            <input type="checkbox" id="atmosphere-toggle-mob" role="switch" aria-label="Ota sää käyttöön">
+            <span class="toggle-track"><span class="toggle-thumb"></span></span>
+          </label>
+          <span class="atm-icon" aria-hidden="true">⛅</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Row 2: atmosphere label + city input, always visible, scrollable on mobile -->
     <div class="nav-row-2">
       <span class="atmosphere-label mono" id="atmosphere-label"></span>
+      <div id="city-input-section-r2" style="display:none;" class="city-section">
+        <div class="city-wrap">
+          <input type="text" id="city-input-r2" placeholder="Kaupunki..." autocomplete="off" aria-label="Kirjoita kaupunki">
+          <div id="city-dropdown-r2" class="city-dropdown" role="listbox"></div>
+        </div>
+      </div>
     </div>
 
   </nav>
-
   <!-- ── Hero ── -->
   <section id="hero">
     <div class="container">
