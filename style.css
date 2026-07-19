@@ -142,7 +142,7 @@ nav {
   display: flex;
   gap: 2rem;
   list-style: none;
-  flex: 1;
+  flex: initial;
 }
 
 .nav-links a {
