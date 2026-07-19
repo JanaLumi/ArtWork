@@ -138,8 +138,11 @@ function initToggle() {
     // Sync both toggles
     if (toggle)    toggle.checked    = checked;
     if (toggleMob) toggleMob.checked = checked;
-    // Show/hide city input on row 2
-    if (cityR2) cityR2.style.display = checked ? 'flex' : 'none';
+    // Show/hide city inputs
+    const cityDesktop = document.getElementById('city-input-section');
+    const cityMob     = document.getElementById('city-input-section-mob');
+    if (cityDesktop) cityDesktop.style.display = checked ? 'flex' : 'none';
+    if (cityMob)     cityMob.style.display     = checked ? 'flex' : 'none';
     if (!checked) {
       applySpaceMood();
     } else if (cityCoords) {
@@ -153,8 +156,14 @@ function initToggle() {
 
 /* ── City typeahead ── */
 function initCityTypeahead() {
-  const input    = document.getElementById('city-input-r2');
-  const dropdown = document.getElementById('city-dropdown-r2');
+  // Wire up both desktop and mobile city inputs to the same handler
+  wireTypeahead('city-input', 'city-dropdown');
+  wireTypeahead('city-input-mob', 'city-dropdown-mob');
+}
+
+function wireTypeahead(inputId, dropdownId) {
+  const input    = document.getElementById(inputId);
+  const dropdown = document.getElementById(dropdownId);
   if (!input || !dropdown) return;
 
   input.addEventListener('input', () => {
@@ -208,7 +217,11 @@ function renderCityDropdown(results, dropdown, input) {
     el.addEventListener('click', () => {
       cityCoords = { lat: +el.dataset.lat, lon: +el.dataset.lon };
       cityLabel  = `${el.dataset.name}, ${el.dataset.country}`;
-      input.value            = cityLabel;
+      // Sync both inputs
+      ['city-input','city-input-mob'].forEach(id => {
+        const el2 = document.getElementById(id);
+        if (el2) el2.value = cityLabel;
+      });
       dropdown.style.display = 'none';
       fetchAndApplyWeather(cityCoords.lat, cityCoords.lon);
     });
