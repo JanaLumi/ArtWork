@@ -52,25 +52,38 @@ let searchColours = []; // array of hex strings, max 3
 function initMobileNav() {
   const toggle = document.getElementById('nav-mobile-toggle');
   const panel  = document.getElementById('nav-collapsible');
-  const arrow  = toggle?.querySelector('.nav-mobile-arrow');
   if (!toggle || !panel) return;
 
+  function closePanel() {
+    panel.classList.remove('open');
+    panel.setAttribute('aria-hidden', 'true');
+    toggle.setAttribute('aria-expanded', 'false');
+    const arrow = toggle.querySelector('.nav-mobile-arrow');
+    if (arrow) arrow.style.transform = '';
+  }
+
+  function openPanel() {
+    panel.classList.add('open');
+    panel.setAttribute('aria-hidden', 'false');
+    toggle.setAttribute('aria-expanded', 'true');
+    const arrow = toggle.querySelector('.nav-mobile-arrow');
+    if (arrow) arrow.style.transform = 'rotate(180deg)';
+  }
+
   toggle.addEventListener('click', () => {
-    const isOpen = panel.classList.contains('open');
-    panel.classList.toggle('open', !isOpen);
-    panel.setAttribute('aria-hidden', String(isOpen));
-    toggle.setAttribute('aria-expanded', String(!isOpen));
-    if (arrow) arrow.style.transform = isOpen ? '' : 'rotate(180deg)';
+    panel.classList.contains('open') ? closePanel() : openPanel();
   });
 
-  // Close when a mobile nav link is tapped
+  // Close when any link inside is tapped
   panel.querySelectorAll('a').forEach(a => {
-    a.addEventListener('click', () => {
-      panel.classList.remove('open');
-      panel.setAttribute('aria-hidden', 'true');
-      toggle.setAttribute('aria-expanded', 'false');
-      if (arrow) arrow.style.transform = '';
-    });
+    a.addEventListener('click', closePanel);
+  });
+
+  // Close when tapping outside the nav
+  document.addEventListener('click', e => {
+    if (!toggle.contains(e.target) && !panel.contains(e.target)) {
+      closePanel();
+    }
   });
 }
 

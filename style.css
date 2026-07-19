@@ -1353,8 +1353,40 @@ footer {
   .nav-right { display: none; }
 }
 
-/* Hide mobile accordion on desktop */
+
+}
+
+
+/* ── Nav weather group: city input + toggle, horizontal ── */
+.nav-weather-group {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+/* ── Nav collapsible panel ── */
+/* Hidden by default on all viewports */
+.nav-collapsible {
+  display: none;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 0.75rem 0;
+  width: min(var(--max), 100% - 3rem);
+  margin-inline: auto;
+  border-top: 1px solid var(--theme-border);
+}
+
+/* Shown when accordion is open — mobile only */
+@media (max-width: 680px) {
+  .nav-collapsible.open {
+    display: flex;
+  }
+}
+
+/* Always hidden on desktop regardless of .open class */
 @media (min-width: 681px) {
-  .nav-mobile-toggle { display: none !important; }
   .nav-collapsible { display: none !important; }
+  .nav-mobile-toggle { display: none !important; }
 }
