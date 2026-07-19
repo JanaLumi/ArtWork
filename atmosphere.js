@@ -129,25 +129,32 @@ function getActiveEvents() {
 
 /* ── Toggle ── */
 function initToggle() {
-  const toggle      = document.getElementById('atmosphere-toggle');
-  const citySection = document.getElementById('city-input-section');
-  if (!toggle) return;
+  const toggle    = document.getElementById('atmosphere-toggle');
+  const toggleMob = document.getElementById('atmosphere-toggle-mob');
+  const cityR2    = document.getElementById('city-input-section-r2');
 
-  toggle.addEventListener('change', () => {
-    weatherActive = toggle.checked;
-    if (citySection) citySection.style.display = weatherActive ? 'flex' : 'none';
-    if (!weatherActive) {
+  function onToggleChange(checked) {
+    weatherActive = checked;
+    // Sync both toggles
+    if (toggle)    toggle.checked    = checked;
+    if (toggleMob) toggleMob.checked = checked;
+    // Show/hide city input on row 2
+    if (cityR2) cityR2.style.display = checked ? 'flex' : 'none';
+    if (!checked) {
       applySpaceMood();
     } else if (cityCoords) {
       fetchAndApplyWeather(cityCoords.lat, cityCoords.lon);
     }
-  });
+  }
+
+  if (toggle)    toggle.addEventListener('change',    () => onToggleChange(toggle.checked));
+  if (toggleMob) toggleMob.addEventListener('change', () => onToggleChange(toggleMob.checked));
 }
 
 /* ── City typeahead ── */
 function initCityTypeahead() {
-  const input    = document.getElementById('city-input');
-  const dropdown = document.getElementById('city-dropdown');
+  const input    = document.getElementById('city-input-r2');
+  const dropdown = document.getElementById('city-dropdown-r2');
   if (!input || !dropdown) return;
 
   input.addEventListener('input', () => {

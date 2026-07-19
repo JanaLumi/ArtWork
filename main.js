@@ -52,19 +52,24 @@ let searchColours = []; // array of hex strings, max 3
 function initMobileNav() {
   const toggle = document.getElementById('nav-mobile-toggle');
   const panel  = document.getElementById('nav-collapsible');
+  const arrow  = toggle?.querySelector('.nav-mobile-arrow');
   if (!toggle || !panel) return;
 
   toggle.addEventListener('click', () => {
     const isOpen = panel.classList.contains('open');
     panel.classList.toggle('open', !isOpen);
+    panel.setAttribute('aria-hidden', String(isOpen));
     toggle.setAttribute('aria-expanded', String(!isOpen));
+    if (arrow) arrow.style.transform = isOpen ? '' : 'rotate(180deg)';
   });
 
-  // Close on nav link click (scrolls to section)
+  // Close when a mobile nav link is tapped
   panel.querySelectorAll('a').forEach(a => {
     a.addEventListener('click', () => {
       panel.classList.remove('open');
+      panel.setAttribute('aria-hidden', 'true');
       toggle.setAttribute('aria-expanded', 'false');
+      if (arrow) arrow.style.transform = '';
     });
   });
 }
