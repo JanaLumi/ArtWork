@@ -780,12 +780,15 @@ function animateWind(ctx, canvas) {
 /* ── Fallback ── */
 function applyFallback() {
   const root = document.documentElement;
-  root.style.setProperty('--theme-bg',      '#0E0E12');
-  root.style.setProperty('--theme-surface',  '#141418');
-  root.style.setProperty('--theme-border',   '#2A2A3A');
-  root.style.setProperty('--theme-accent',   '#8B6F4E');
-  root.style.setProperty('--theme-text',     '#E8E4DC');
-  root.style.setProperty('--theme-mid',      '#7A7468');
+  root.style.setProperty('--theme-bg',      '#080810');
+  root.style.setProperty('--theme-bg-surface',  '#0C0C18');
+  root.style.setProperty('--theme-border',   '#1A1A3A');
+  root.style.setProperty('--theme-accent',   '#3A3A6A');
+  root.style.setProperty('--theme-line-primary',     '#D0D0E8');
+  root.style.setProperty('--theme-line-mid-primary',      '#6868A0');
+  root.style.setProperty('--theme-line-subtle',      '#404068');
+  root.style.setProperty('--theme-line-secondary',     '#C0C0D8');
+  root.style.setProperty('--theme-line-mid-secondary',      '#484870');
   document.body.setAttribute('data-theme', 'dark');
 }
 
