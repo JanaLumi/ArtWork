@@ -313,12 +313,17 @@ function applyMoodWithModifiers(baseMoodKey, weatherModKey, spaceAnimKeys, label
   // Set base palette tokens
   const root = document.documentElement;
   root.style.setProperty('--theme-bg',      '#' + bg);
-  root.style.setProperty('--theme-surface',  '#' + palette.surface);
+  root.style.setProperty('--theme-bg-surface',  '#' + palette.surface);
   root.style.setProperty('--theme-border',   '#' + palette.border);
   root.style.setProperty('--theme-accent',   '#' + palette.accent);
-  root.style.setProperty('--theme-text',     '#' + (dark ? palette.text_light : palette.text_dark));
+  root.style.setProperty('--theme-line-primary',     '#' + (dark ? palette.text_light : palette.text_dark)); // needs work
+  root.style.setProperty('--theme-line-mid-primary',      '#' + (dark ? palette.mid_light : palette.mid_dark)); // needs work
+  root.style.setProperty('--theme-line-subtle',      '#' + (dark ? palette.text_light : palette.text_dark)); // needs work
+  root.style.setProperty('--theme-line-secondary',     '#' + (dark ? palette.text_light : palette.text_dark)); // needs work
+  root.style.setProperty('--theme-line-mid-secondary',      '#' + (dark ? palette.text_light : palette.text_dark)); // needs work
+//  root.style.setProperty('--theme-text',     '#' + (dark ? palette.text_light : palette.text_dark));
   root.style.setProperty('--theme-mid',      '#' + (dark ? palette.mid_light  : palette.mid_dark));
-
+   
   document.body.setAttribute('data-theme', dark ? 'dark' : 'light');
   document.body.setAttribute('data-mood',  baseMoodKey);
 
