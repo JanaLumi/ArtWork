@@ -310,19 +310,36 @@ function applyMoodWithModifiers(baseMoodKey, weatherModKey, spaceAnimKeys, label
   const lum = luminance(bg);
   const dark = lum < 0.35;
 
-  // Set base palette tokens
+  // Set base palette tokens — column names match data/themes.csv headers
+  // Anchors: bg, bg_surface, line_primary, line_secondary, accent
+  // Derived (overridable): line_mid_primary, line_subtle, line_mid_secondary
   const root = document.documentElement;
-  root.style.setProperty('--theme-bg',      '#' + bg);
-  root.style.setProperty('--theme-bg-surface',  '#' + palette.surface);
-  root.style.setProperty('--theme-border',   '#' + palette.border);
-  root.style.setProperty('--theme-accent',   '#' + palette.accent);
-  root.style.setProperty('--theme-line-primary',     '#' + (dark ? palette.text_light : palette.text_dark)); // needs work
-  root.style.setProperty('--theme-line-mid-primary',      '#' + (dark ? palette.mid_light : palette.mid_dark)); // needs work
-  root.style.setProperty('--theme-line-subtle',      '#' + (dark ? palette.text_light : palette.text_dark)); // needs work
-  root.style.setProperty('--theme-line-secondary',     '#' + (dark ? palette.text_light : palette.text_dark)); // needs work
-  root.style.setProperty('--theme-line-mid-secondary',      '#' + (dark ? palette.text_light : palette.text_dark)); // needs work
-//  root.style.setProperty('--theme-text',     '#' + (dark ? palette.text_light : palette.text_dark));
-  root.style.setProperty('--theme-mid',      '#' + (dark ? palette.mid_light  : palette.mid_dark));
+
+  const midPrimary   = palette.line_mid_primary   || interpolateHex(palette.bg,         palette.line_primary,   0.35);
+  const subtle       = palette.line_subtle        || interpolateHex(palette.bg,         palette.line_primary,   0.15);
+  const midSecondary = palette.line_mid_secondary || interpolateHex(palette.bg_surface,  palette.line_secondary, 0.35);
+
+  root.style.setProperty('--theme-bg',                '#' + palette.bg);
+  root.style.setProperty('--theme-bg-surface',         '#' + (palette.bg_surface       || palette.bg));
+  root.style.setProperty('--theme-line-primary',       '#' + (palette.line_primary      || 'D0D0E8'));
+  root.style.setProperty('--theme-line-secondary',     '#' + (palette.line_secondary    || 'C0C0D8'));
+  root.style.setProperty('--theme-line-mid-primary',   '#' + midPrimary);
+  root.style.setProperty('--theme-line-subtle',        '#' + subtle);
+  root.style.setProperty('--theme-line-mid-secondary', '#' + midSecondary);
+  root.style.setProperty('--theme-accent',             '#' + (palette.accent            || '8B6F4E'));
+  root.style.setProperty('--theme-border',             '#' + (palette.line_subtle       || '2A2A3A'));
+
+  // Apply gradient to hero if specified in CSV
+  const hero = document.getElementById('hero');
+  if (hero) {
+    if (palette.bg_gradient) {
+      hero.style.backgroundImage = palette.bg_gradient;
+      hero.style.backgroundColor = '';
+    } else {
+      hero.style.backgroundImage = '';
+      hero.style.backgroundColor = '#' + palette.bg;
+    }
+  }
    
   document.body.setAttribute('data-theme', dark ? 'dark' : 'light');
   document.body.setAttribute('data-mood',  baseMoodKey);
