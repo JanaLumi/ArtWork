@@ -89,6 +89,9 @@ function initMobileNav() {
 
 /* ── Boot ── */
 document.addEventListener('DOMContentLoaded', () => {
+  // Initialize the mobile navigation immediately
+  initMobileNav();
+   
   Papa.parse('data/artworks.csv', {
     download:      true,
     header:        true,
