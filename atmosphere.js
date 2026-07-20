@@ -352,13 +352,13 @@ function applyMoodWithModifiers(baseMoodKey, weatherModKey, spaceAnimKeys, label
   // Apply gradient to hero if specified in CSV
   const hero = document.getElementById('hero');
   if (hero) {
-    if (palette.bg_gradient) {
-      hero.style.backgroundImage = palette.bg_gradient;
-      hero.style.backgroundColor = '';
-    } else {
-      hero.style.backgroundImage = '';
-      hero.style.backgroundColor = '#' + palette.bg;
-    }
+     if (!weatherActive || !palette.bg_gradient) {
+       hero.style.backgroundImage = '';
+       hero.style.backgroundColor = '#' + palette.bg;
+     } else {
+       hero.style.backgroundImage = palette.bg_gradient;
+       hero.style.backgroundColor = '';
+     }
   }
    
   document.body.setAttribute('data-theme', dark ? 'dark' : 'light');
