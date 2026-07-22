@@ -5,6 +5,8 @@ Art is work. It is the story of who we are, our times, and the heart we put into
 
 [Report and Outline (Private)](https://docs.google.com/document/d/1lp39j3wZpBI6q2ed2oe9IktdEp6qTS9QSyuZWTEFD9I/edit?usp=sharing)
 
+## License
+
 Copyright (c) 2026 Jana Lumi. All rights reserved.
 
 This project and its source code are proprietary.
