@@ -352,7 +352,7 @@ function applyMoodWithModifiers(baseMoodKey, weatherModKey, spaceAnimKeys, label
   // Apply gradient to hero if specified in CSV
   const hero = document.getElementById('hero');
   if (hero) {
-     if (!weatherActive || !palette.bg_gradient) {
+     if (weatherActive && palette.bg_gradient) {
        hero.style.backgroundImage = '';
        hero.style.backgroundColor = '#' + palette.bg;
      } else {
