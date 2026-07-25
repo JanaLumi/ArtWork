@@ -1350,7 +1350,7 @@ footer {
     overflow-x: auto;
     scrollbar-width: none;
     -webkit-overflow-scrolling: touch;
-    justify-content: right; /* flex-start; */
+    justify-content: unset; /* free it so it can scroll */
     flex-wrap: nowrap;
     padding-bottom: 0.25rem;
   }
