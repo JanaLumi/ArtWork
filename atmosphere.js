@@ -277,7 +277,7 @@ function applyWeatherMood(code, cloud, temp, wind, precip, sunriseISO, sunsetISO
 /* ── Space mood — always night ── */
 function applySpaceMood() {
   const now    = new Date();
-  const hour   = now.getHours();
+//  const hour   = now.getHours(); // we are not using day/night hours for space mode
   const month  = now.getMonth();
   const moon   = getMoonPhase(now);
 
@@ -301,7 +301,7 @@ function applySpaceMood() {
                   : NAMED_MOONS[month];
 
   // Base from time of day (always night range in space mode)
-  const baseMood = getNightTod(hour);
+//  const baseMood = getNightTod(hour);
 
   // Active space events as additional modifier animations
   const activeEvents = getActiveEvents();
@@ -316,7 +316,7 @@ function applySpaceMood() {
     ? `${moonEmoji} ${moonName} · ${eventLabel}`
     : `${moonEmoji} ${moonName}`;
 
-  applyMoodWithModifiers(baseMood, null, spaceModKeys, label);
+  applyMoodWithModifiers(moonKey, null, spaceModKeys, label);
 }
 
 /* ── Apply base + modifiers ── */
