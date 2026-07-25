@@ -730,6 +730,7 @@ footer {
   display: flex;
   align-items: center;
   gap: 0.4rem;
+  margin: 4px 0;
 }
 
 .atm-icon {
@@ -1269,6 +1270,10 @@ footer {
   align-items: center;
   gap: 0.5rem;
   flex-shrink: 0;
+}
+
+.atmosphere-control {
+    margin: 8px 0;
 }
 
 /* ── Nav collapsible panel ── */
