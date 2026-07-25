@@ -321,6 +321,7 @@ function applySpaceMood() {
 
 /* ── Apply base + modifiers ── */
 function applyMoodWithModifiers(baseMoodKey, weatherModKey, spaceAnimKeys, label) {
+  console.log('applyMoodWithModifiers', baseMoodKey, 'weatherActive:', weatherActive, 'gradient:', basePalettes[baseMoodKey]?.bg_gradient);
   const palette = basePalettes[baseMoodKey] || basePalettes['deep_night'];
   if (!palette) { applyFallback(); return; }
 
@@ -352,7 +353,7 @@ function applyMoodWithModifiers(baseMoodKey, weatherModKey, spaceAnimKeys, label
   // Apply gradient to hero if specified in CSV
   const hero = document.getElementById('hero');
   if (hero) {
-     if (weatherActive && palette.bg_gradient) {
+     if (!weatherActive || !palette.bg_gradient) { //if (weatherActive && palette.bg_gradient) { // test it this way then that way
        hero.style.backgroundImage = '';
        hero.style.backgroundColor = '#' + palette.bg;
      } else {
