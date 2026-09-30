@@ -1,6 +1,8 @@
 # ArtWork
 Art is work. It is the story of who we are, our times, and the heart we put into everything we do.
 
+Demo [https://janalumi.github.io/ArtWork/](https://janalumi.github.io/ArtWork/)
+
 [Flowchart](https://janalumi.github.io/ArtWork/tools/ArtWork-flowchart.html)
 
 [Report and Outline (Private)](https://docs.google.com/document/d/1lp39j3wZpBI6q2ed2oe9IktdEp6qTS9QSyuZWTEFD9I/edit?usp=sharing)
